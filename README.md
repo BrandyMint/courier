@@ -1,5 +1,3 @@
-= courier
-
 Courier
 =======
 
@@ -128,13 +126,3 @@ user.courier.bootstrap!
 
 user.courier.message
 user.message 
-
-== Contributing to courier
- 
-* Да, контрибьютьте на здоровье.
-
-== Copyright
-
-Copyright (c) 2011 Danil Pismenny. See LICENSE.txt for
-further details.
-
