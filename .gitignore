@@ -42,3 +42,4 @@ pkg
 #*.swp
 /.emacs.desktop
 /.emacs.desktop.lock
+/Gemfile.lock
