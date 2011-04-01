@@ -14,7 +14,7 @@ end
 
 def run_spec_matching(thing_to_match)
   puts "Matching #{thing_to_match}"
-  matches = Dir[all_spec_files].grep(/#{thing_to_match}/i)
+  matches = Dir[all_spec_files].grep(/#{thing_to_match}_spec/i)
   if matches.empty?
     puts "Sorry, thanks for playing, but there were no matches for #{thing_to_match}"
   else
@@ -24,7 +24,7 @@ end
 
 def run(files_to_run)
   puts "Running #{files_to_run}"
-  system "bundle exec rspec #{files_to_run}"
+  system "bundle exec rspec -d #{files_to_run}"
   no_int_for_you
   notify
   puts
@@ -65,8 +65,8 @@ watch('^app/(.*)\.(.*)') { |m| run_spec_matching(m[1]) }
 watch('^lib\/(.*)\.rb') { |m| run_spec_matching(m[1]) }
 watch('^spec\/(.*)_spec\.rb') { |m| run_spec_matching(m[1]) }
 watch('^spec\/factories/(.*)_factory\.rb') { |m| run_spec_matching(m[1]) }
-# watch('^spec/spec_helper\.rb') { run_all_specs }
-# watch('^spec/support/.*\.rb') { run_all_specs }
+watch('^spec/spec_helper\.rb') { run_all_specs }
+watch('^spec/support/.*\.rb') { run_all_specs }
 
 # --------------------------------------------------
 # Signal Handling

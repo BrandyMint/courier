@@ -2,10 +2,13 @@ source "http://rubygems.org"
 
 gem 'activerecord', "~> 3.0"
 gem 'actionpack', "~> 3.0"
+gem 'state_machine'
 
 # Add dependencies to develop your gem here.
 # Include everything needed to run rake, tests, features, etc.
 group :development, :test do
+  gem 'pg'
+  gem "ruby-debug"
   gem "watchr"
   gem "sqlite3"
   gem "factory_girl"
