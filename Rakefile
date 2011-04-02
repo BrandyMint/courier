@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 require 'rubygems'
 require 'bundler'
 begin
@@ -15,8 +16,8 @@ Jeweler::Tasks.new do |gem|
   gem.name = "courier"
   gem.homepage = "http://github.com/dapi/courier"
   gem.license = "MIT"
-  gem.summary = %Q{TODO: one-line summary of your gem}
-  gem.description = %Q{TODO: longer description of your gem}
+  gem.summary = "Система управления пользовательскими оповещениями и подписками"
+  gem.description = 'Система управления пользовательскими оповещениями и подписками'
   gem.email = "danil@orionet.ru"
   gem.authors = ["Danil Pismenny"]
   # Include your dependencies below. Runtime dependencies are required when using your gem,
