@@ -17,7 +17,7 @@ Courier - Универсальная система контроля польз�
 
     has_courier
 
-В config/initializers/courier.rb регистрируем используемые сервисы и шаблоны:
+В config/initializers/courier.rb регистрируем используемые сервисы, шаблоны и их значения по умолчанию:
 
     Courier.init do |d|
       d.services                       :active_mailer, :gritter_notice, :facebook
@@ -43,14 +43,42 @@ Courier - Универсальная система контроля польз�
 * Courier::Service::GritterNotice - отправка сообщений через gritter_notices[http://github.com/dapi/gritter_notices]
 * Courier::Service::ActionMailer  - TODO
 * Courier::Service::MailChimp     - TODO
-* Courier::Service::Facebook      - Использует Koala
+* Courier::Service::Facebook      - Использует Koala[https://github.com/arsduo/koala]
+
+== Свой сервис
+
+Все сервисы наследуютсяо от <tt>Courier::Service::Base</tt>. Последнее
+имя класс автоматически становится именем этого сервиса через
++demodulize.underscore+. Всего нужно имплементировать 2 метода:
+
+* +message(owner, template, args)+
+* +deliver!+
+
+=== Сервис отложенной отправки
+
+Достаточно реализовать метод +deliver!+, так как +message+ удачно складывает все сообщения в базу. Например:
+
+    def deliver!
+      courier_messages.fresh.each do |message|
+        send_message_my_way message.owner, message.text
+      end
+    end
+
+=== Сервис отправки в реальном времени
+
+Достаточно реализоват метод +message+. Например:
+
+
+    def message(owner, template, args)
+      send_message_my_way owner, template.get_text(args)
+    end
+
 
 == Contributing to courier
 
-* Да, контрибьютьте на здоровье.
+* Yes, please.
 
 == Copyright
 
-Copyright (c) 2011 Danil Pismenny. See LICENSE.txt for
-further details.
+Copyright (c) 2011 Danil Pismenny.
 
