@@ -9,7 +9,8 @@ class Courier::Template::Base
   end
 
   def get_text(args)
-    args[:scope]=[:courier,:messages,args[:service].name] unless args[:scope]
+    raise 'Service is not defined' unless args[:service]
+    args[:scope]=[:courier, args[:service].name] unless args[:scope]
     args[:cascade]=true unless args.has_key? :cascade
     I18n::translate(name, args )
   end

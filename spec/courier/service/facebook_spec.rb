@@ -15,8 +15,8 @@ describe Courier::Service::Facebook do
         with(message.options[:text], message.options[:attachment], message.options[:to]) { true }
       Koala::Facebook::GraphAPI.should_receive(:new).with('fbtoken') { graph }
 
-      subject.stub_chain('courier_messages.fresh') { [message] }
-      subject.deliver!
+      subject.stub_chain('messages.fresh') { [message] }
+      subject.deliver_all!
     end
   end
 end

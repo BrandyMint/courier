@@ -11,7 +11,8 @@ describe User, "Courier::Owner extention" do
   end
 
   describe '#message' do
-    let(:args) { {:level=>123,:text=>'some text'} }
+    let(:args) { {:level=>123, :text=>'some text'} }
+    subject{ Factory :user }
     it 'should send message to enabled services only' do
       template = mock_template
 
@@ -19,13 +20,14 @@ describe User, "Courier::Owner extention" do
       service2 = mock_service
       service1.should_receive(:message).with(subject, template, args)
 
+      subject.should_not_receive :create_courier
+
       subject.courier.should_receive(:enabled?).twice { |template, service, args|
         service==service1
       }
 
       Courier.should_receive(:config) { double :services_order=>[service1, service2] }
       Courier.should_receive(:template).with(:templ) { template }
-
       subject.message :templ, args
     end
   end

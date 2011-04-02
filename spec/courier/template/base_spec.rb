@@ -12,7 +12,7 @@ describe Courier::Template::Base do
       subject.should_receive(:name) { 'template_key' }
       subject.
         get_text(:some_option=>123,:service=>double(:name=>'facebook')).should ==
-        'translation missing: en.courier.messages.facebook.template_key'
+        'translation missing: en.courier.facebook.template_key'
     end
   end
 

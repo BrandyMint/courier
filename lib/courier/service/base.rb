@@ -36,8 +36,8 @@ class Courier::Service::Base
 
   def check_args owner, template, args
     args[:owner]  ||=owner
-    args[:text]   ||=template.get_text(args)
     args[:service]||=self
+    args[:text]   ||=template.get_text(args)
   end
 
   def message(owner, template, args)
