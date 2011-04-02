@@ -18,8 +18,11 @@ class Courier::Service::GritterNotice < Courier::Service::Base
   #
 
   def message(owner, template, options)
-    options[:scope]=[:courier, :gritter_notice] unless options[:scope]
-    owner.gritter_notice template.name, I18n::translate(template.name, options )
+    scope = [:courier, :gritter_notice]
+    opt = I18n::translate(template.name, :scope=>scope)
+    opt.merge!(options)
+    opt[:text]||=I18n::translate([template.name,:text], opt.merge(:scope=>scope) )
+    owner.gritter_notice template.name, opt
   end
 
   def deliver!
