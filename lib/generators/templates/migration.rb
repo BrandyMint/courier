@@ -19,15 +19,15 @@ class CreateCourierTables < ActiveRecord::Migration
     create_table :courier_messages, :force => true do |t|
       t.integer   :owner_id,                           :null => false
       t.string    :owner_type,                         :null => false
-      t.integer   :template_id,                        :null => false
-      t.integer   :service_id,                         :null => false
+      t.string    :template,                           :null => false
+      t.string    :service,                            :null => false
       t.string    :state,                              :null => false
       t.text      :options,                            :null => false
       t.timestamp :delivered_at
       t.timestamps
     end
 
-    add_index :courier_messages, [:service_id, :state]
+    add_index :courier_messages, [:service, :state]
   end
 
   def self.down

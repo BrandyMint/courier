@@ -7,18 +7,18 @@ describe Courier::Service::Base do
   describe '#message' do
     it 'saves message in database' do
       args={:a=>1}
-      owner = double
-      template = double
-      cm = double
-      cm.should_receive(:create!).with(:owner=>owner, :template=>template, :options=>args)
-      subject.should_receive(:courier_messages) { cm }
+      owner = Factory :user
+      owner.courier_messages.should be_empty
+      template = double :template, :name=>:template_key
       subject.should_receive(:check_args).with(owner, template, args)
       subject.message owner, template, args
+      owner.courier_messages(true).should have(1).items
     end
   end
 
   # inherited in subclasses
-  describe '#deliver!'
+  describe '#deliver!' do
+  end
 
   describe 'last subclass title as name' do
     before do

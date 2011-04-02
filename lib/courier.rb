@@ -19,7 +19,7 @@ module Courier
 
     def deliver_all!
       config.services.each do |service|
-        service.deliver!
+        service.deliver_all!
       end
     end
 

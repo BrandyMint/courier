@@ -26,6 +26,10 @@ class Courier::Template::Base
     defaults[service.name.to_sym] = check_val(val)
   end
 
+  def to_s
+    "Courier::Template(#{name})"
+  end
+
   def key
     name
   end

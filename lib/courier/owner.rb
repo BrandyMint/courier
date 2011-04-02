@@ -14,6 +14,7 @@
 module Courier::Owner
   def has_courier
     has_one :courier, :as => :owner, :dependent => :destroy, :class_name=>'Courier::OwnerSetting'
+    has_many :courier_messages, :as => :owner, :dependent => :destroy, :class_name=>'Courier::Message'
     include InstanceMethods
 
     after_create do

@@ -16,7 +16,7 @@ describe Courier do
   describe '.deliver_all!' do
     it 'should run deliver! for all services' do
       service = mock_service
-      service.should_receive(:deliver!).twice
+      service.should_receive(:deliver_all!).twice
       Courier.config.should_receive(:services) { [service, service]}
       Courier.deliver_all!
     end

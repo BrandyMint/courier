@@ -42,14 +42,28 @@ class Courier::Service::Base
 
   def message(owner, template, args)
     check_args owner, template, args
-    courier_messages.create! :owner=>owner, :template=>template, :options=>args
+    Courier::Message.create! :owner=>owner, :template=>template.name, :service=>name, :options=>args
+  end
+
+  def to_s
+    name
   end
 
   def name
     self.class.name.demodulize.underscore.to_sym
   end
 
-  def deliver!
-    raise 'inherit my class and implement me'
+  def deliver_message(message)
+    raise 'inherit and implement me'
+  end
+
+  def messages
+    Courier::Message.by_service(name)
+  end
+
+  def deliver_all!
+    messages.fresh.each do |message|
+      deliver_message(message) and message.set_delivered
+    end
   end
 end

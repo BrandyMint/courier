@@ -70,12 +70,19 @@ Gemfile:
 
 === Сервис отложенной отправки
 
-Достаточно реализовать метод <tt>deliver!</tt>, так как +message+ удачно складывает все сообщения в базу. Например:
+Достаточно реализовать метод <tt>deliver_all!</tt> или <tt>deliver_message</tt>, так как +message+ удачно складывает все сообщения в базу. Например:
 
-    def deliver!
-      courier_messages.fresh.each do |message|
-        send_message_my_way message.owner, message.text
+    def deliver_all!
+      messages.fresh.each do |message|
+        send_message_my_way(message.owner, message.text) and message.set_delivered
       end
+    end
+
+или
+
+    def deliver_message(message)
+      send_message_my_way(message.owner, message.text)
+      # returns true to mark message as delivered
     end
 
 === Сервис отправки в реальном времени

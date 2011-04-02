@@ -7,12 +7,11 @@ class Courier::Message < ActiveRecord::Base
   set_table_name 'courier_messages'
 
   belongs_to :owner, :polymorphic=>true
-  belongs_to :service #, :polymorphic=>true
-  belongs_to :template #, :polymorphic=>true
 
   serialize :options, Hash
 
   scope :fresh, where(:state=>:fresh)
+  scope :by_service, lambda { |service| where(:service=>service.to_s) }
 
   validates_presence_of :owner, :service, :template
 
