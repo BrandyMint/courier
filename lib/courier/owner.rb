@@ -24,7 +24,7 @@ module Courier::Owner
   module InstanceMethods
     def message(template_key, args={})
       template = Courier.template(template_key)
-      Courier.services.each do |service|
+      Courier.config.services_order.each do |service|
         service.message(self, template, args) if courier.enabled?(template, service, args)
       end
     end

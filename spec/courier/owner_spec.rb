@@ -23,7 +23,7 @@ describe User, "Courier::Owner extention" do
         service==service1
       }
 
-      Courier.should_receive(:services) { [service1, service2] }
+      Courier.should_receive(:config) { double :services_order=>[service1, service2] }
       Courier.should_receive(:template).with(:templ) { template }
 
       subject.message :templ, args
