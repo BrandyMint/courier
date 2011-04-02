@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 require 'spec_helper'
 
-describe Courier::Service::GritterNotices do
+describe Courier::Service::GritterNotice do
   describe '#message' do
     it 'send message to gritter_notice' do
       args={:a=>1}

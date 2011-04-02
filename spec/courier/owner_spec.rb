@@ -3,64 +3,30 @@ require 'spec_helper'
 
 describe User, "Courier::Owner extention" do
 
-  it { should have_many(:courier_owner_sets).dependent(:destroy) }
-  it { should have_many(:courier_enabled_services) }
+  it { should have_one(:courier).dependent(:destroy) }
 
-
-  def clear_stuff
-    Courier::Service::Base.destroy_all
-    Courier::Template::Base.destroy_all
-  end
-
-  def register_stuff
-    clear_stuff
-    Courier.register_services(Courier::Service::ActiveMailer, Courier::Service::GritterNotices)
-    Courier.register_templates(:system_notify, :import_complete, :avatar_loaded)
-  end
-
-  describe '.courier_bootstrap_all!' do
-    it 'should bootstrap all owners' do
-      o = double()
-      o.should_receive :courier_bootstrap!
-      User.should_receive(:all) { [o] }
-      User.courier_bootstrap_all!
-    end
-  end
-
-
-  describe '#courier_enabled_services' do
-    before do
-      Factory :service_email
-    end
+  describe 'creates courier automatically' do
+    subject{ Factory :user }
+    its(:courier) { should be_kind_of(Courier::OwnerSetting) }
   end
 
   describe '#message' do
     let(:args) { {:level=>123,:text=>'some text'} }
-    it 'should send message to all enabled services for selected template' do
+    it 'should send message to enabled services only' do
       template = mock_template
 
-      set = mock_sets
-      set.should_receive(:message).with(args).twice
-      subject.courier_owner_sets.should_receive(:by_template).with(template) { mock :enabled=>[set, set] }
+      service1 = mock_service
+      service2 = mock_service
+      service1.should_receive(:message).with(subject, template, args)
 
+      subject.courier.should_receive(:enabled?).twice { |template, service, args|
+        service==service1
+      }
+
+      Courier.should_receive(:services) { [service1, service2] }
       Courier.should_receive(:template).with(:templ) { template }
-      subject.message :templ, args
-    end
-  end
 
-  describe '#courier_bootstrap!' do
-    describe 'bootstraps at creation' do
-      before(:all) do
-        register_stuff
-        @owner = Factory :user
-        # @owner.courier_bootstrap!
-      end
-      subject {@owner}
-      its(:courier_owner_sets) { should have(6).items }
-      after(:all) do
-        # @owner.destroy
-        clear_stuff
-      end
+      subject.message :templ, args
     end
   end
 end

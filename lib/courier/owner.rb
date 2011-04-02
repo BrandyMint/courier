@@ -13,40 +13,19 @@
 
 module Courier::Owner
   def has_courier
-    has_many :courier_owner_sets, :as => :owner, :dependent => :destroy, :class_name=>'Courier::OwnerSet'
-    has_many :courier_enabled_services, :through=>:courier_owner_sets, :conditions=>{:state=>:enabled}
-
-    after_create :courier_bootstrap!
+    has_one :courier, :as => :owner, :dependent => :destroy, :class_name=>'Courier::OwnerSetting'
     include InstanceMethods
-  end
 
-  # bootstrap all owners!
-  def courier_bootstrap_all!
-    all.each do |o|
-      o.courier_bootstrap!
+    after_create do
+      create_courier
     end
   end
 
   module InstanceMethods
-    def courier
-      @courier ||= Courier::OwnersObject.new(self)
-    end
-
     def message(template_key, args={})
       template = Courier.template(template_key)
-      courier_owner_sets.by_template(template).enabled.each do |set|
-        set.message(args)
-      end
-    end
-
-    #
-    # Создает владельцу матрицу owner_sets - по записи для каждого шаблона и каждого сервиса
-    #
-    def courier_bootstrap!
       Courier.services.each do |service|
-        Courier.templates.each do |template|
-          courier_owner_sets.create(:template=>template, :service=>service)
-        end
+        service.message(self, template, args) if courier.enabled?(template, service, args)
       end
     end
   end

@@ -15,31 +15,35 @@ Courier - Универсальная система контроля польз�
 
 В модели пользователя:
 
-   has_courier
+    has_courier
 
 В config/initializers/courier.rb регистрируем используемые сервисы и шаблоны:
 
-   Courier.register_services(Courier::Service::ActiveMailer, Courier::Service::GritterNotices)
-   Courier.register_templates(:import_complete, :avatar_loaded)
+    Courier.init do |d|
+      d.services                       :active_mailer, :gritter_notice, :facebook
+      d.template :import_complete,     :off,           :on,              :off
+      d.template :avatar_loaded,       :on,            :off,             :on
+      d.template :weekly_subscription, :on,            :on,              :on
+    end
 
-Посылаем пользователю сообщение по шаблону во все разрешенные сервисы
+Посылаем пользователю сообщение по шаблону +:import_complete+ во все разрешенные сервисы
 
-   user.message :import_complete, {:some=>'arguments in hash'}
+    user.message :import_complete, {:some=>'arguments in hash'}
 
 Если сервис отправляет сообщение в реальном времени, то он его уже
 отправил, а если сообщения собираются для дальнейшей отправки, то
 осуществляется эта доставка так:
 
-   Courier.deliver_all!
+    Courier.deliver_all!
 
 == Сервисы
 
 На данный момент реализованы сервисы:
 
-* Courier::Service::GritterNotices - отправка сообщений через gritter_notices[http://github.com/dapi/gritter_notices]
-* Courier::Service::ActionMailer   - TODO
-* Courier::Service::MailChimp      - TODO
-* Courier::Service::Facebook       - TODO
+* Courier::Service::GritterNotice - отправка сообщений через gritter_notices[http://github.com/dapi/gritter_notices]
+* Courier::Service::ActionMailer  - TODO
+* Courier::Service::MailChimp     - TODO
+* Courier::Service::Facebook      - Использует Koala
 
 == Contributing to courier
 

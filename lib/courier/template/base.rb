@@ -1,15 +1,41 @@
 # -*- coding: utf-8 -*-
-class Courier::Template::Base < ActiveRecord::Base
-  set_table_name 'courier_templates'
+class Courier::Template::Base
 
-  has_many :courier_owner_sets, :class_name=>"Courier::OwnerSet", :foreign_key=>:template_id, :dependent=>:destroy
-  has_many :services, :through=>:courier_owner_sets
+  attr_accessor :name, :defaults
 
-  validates_presence_of :key
-  validates_uniqueness_of :key
+  def initialize(args)
+    self.name = args[:name].to_sym or raise 'no template name defined'
+    self.defaults={}
+  end
 
   def get_text(args)
-    args[:scope]=[:courier,:messages] unless args[:scope]
-    I18n::translate(key, args )
+    args[:scope]=[:courier,:messages,args[:service].name] unless args[:scope]
+    args[:cascade]=true unless args.has_key? :cascade
+    I18n::translate(name, args )
   end
+
+  def get(service)
+    service = Courier.service(service) if service.is_a?(Symbol)
+    name = service.name.to_sym
+    raise "Not defined default value for #{service} in template #{self}" unless defaults.has_key? name
+    defaults[name]
+  end
+
+  def set(service, val)
+    service = Courier.service(service) if service.is_a?(Symbol)
+    defaults[service.name.to_sym] = check_val(val)
+  end
+
+  def key
+    name
+  end
+
+  private
+
+  def check_val(val)
+    raise "Value must be :on or :off" unless val==:on or val==:off
+    val
+  end
+
+
 end

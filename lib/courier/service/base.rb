@@ -16,36 +16,40 @@
 # доставщики подключаются через команду
 # Courier.register_service(SMS::LittleSMS, Email::ActionMailer,.. )
 
+require 'ostruct'
 
-class Courier::Service::Base < ActiveRecord::Base
-  set_table_name 'courier_services'
+class Courier::Service::Base
+  class << self
+    def inherited(subclass)
+      subclass.instance_variable_set('@config', OpenStruct.new)
+      super
+    end
 
-  has_many :courier_owner_sets, :class_name=>"Courier::OwnerSet", :dependent=>:destroy, :foreign_key=>:service_id #, :as=>:service
-  has_many :courier_messages, :class_name=>"Courier::Message", :dependent=>:destroy, :foreign_key=>:service_id
+    def configure
+      yield @config
+    end
 
-  before_validation :set_name
+    def config
+      @config
+    end
+  end
 
-  validates_presence_of :name, :type
-  validates_uniqueness_of :name
-
-  default_scope order('id')
-  scope :enabled_for_owner, lambda { |owner| include(:courier_owner_sets).where(:owner=>owner) }
+  def check_args owner, template, args
+    args[:owner]  ||=owner
+    args[:text]   ||=template.get_text(args)
+    args[:service]||=self
+  end
 
   def message(owner, template, args)
+    check_args owner, template, args
     courier_messages.create! :owner=>owner, :template=>template, :options=>args
   end
 
   def name
-    read_attribute('name') || self.class.name.split('::').last
+    self.class.name.demodulize.underscore.to_sym
   end
 
   def deliver!
     raise 'inherit my class and implement me'
-  end
-
-  private
-
-  def set_name
-    self.name = name
   end
 end

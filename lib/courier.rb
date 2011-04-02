@@ -1,45 +1,34 @@
 # -*- coding: utf-8 -*-
 module Courier
-  require 'courier/owner_set'
+  require 'courier/owner_setting'
+  require 'courier/config'
   module Service
     require 'courier/service/base'
-    require 'courier/service/active_mailer'
-    require 'courier/service/gritter_notices'
+    Dir["#{File.dirname(__FILE__)}/courier/service/**/*.rb"].each {|f| require f}
   end
   module Template
     require 'courier/template/base'
   end
 
-  # TODO Cache
   class << self
-    def template(key)
-      Courier::Template::Base.find_by_key(key) or raise "No such template '#{key}' found"
-    end
+    cattr_accessor :config
 
-    def templates
-      Courier::Template::Base.all
-    end
-
-    def register_templates(*templates)
-      templates.each do |templ|
-        Courier::Template::Base.create! :key=>templ
-      end
-    end
-
-    def register_services(*services)
-      services.each do |service_class|
-        service_class.create!
-      end
-    end
-
-    def services
-      Courier::Service::Base.all
+    def init
+      yield self.config = Courier::Config.new
     end
 
     def deliver_all!
-      services.each do |service|
+      config.services.each do |service|
         service.deliver!
       end
+    end
+
+    def template(name)
+      config.get_template(name)
+    end
+
+    def service(name)
+      config.get_service(name)
     end
   end
 end
