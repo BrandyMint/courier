@@ -11,7 +11,7 @@ describe Courier::Template::Base do
     it 'should return text with localized tranlation' do
       subject.should_receive(:name) { 'template_key' }
       subject.
-        get_text(:some_option=>123,:service=>double(:name=>'facebook')).should ==
+        get_text(mock_service(:to_s=>'facebook'), :some_option=>123).should ==
         'translation missing: en.courier.facebook.template_key'
     end
   end

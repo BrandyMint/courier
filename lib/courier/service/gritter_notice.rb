@@ -6,10 +6,20 @@ class Courier::Service::GritterNotice < Courier::Service::Base
     super
   end
 
+  #
+  # В локале создается хеш всех параметров принимаемых GritterNotice
+  #
+  # template_key:
+  #   title: Внимание!
+  #   text: Ва прошли на новый уровень
+  #   level: warning
+  #   image: /images/warning.png
+  #
+  #
+
   def message(owner, template, options)
-    options[:scope]=[:courier,:messages,:gritter_notice] unless options[:scope]
-    options[:text]=I18n::translate(name, options )
-    owner.gritter_notice template.name, options
+    options[:scope]=[:courier, :gritter_notice] unless options[:scope]
+    owner.gritter_notice template.name, I18n::translate(template.name, options )
   end
 
   def deliver!

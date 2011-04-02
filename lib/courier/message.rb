@@ -22,4 +22,16 @@ class Courier::Message < ActiveRecord::Base
       transition :fresh => :delivered
     end
   end
+
+  def destroy_when_delivered?
+    true
+  end
+
+  def mark_as_delivered!
+    if destroy_when_delivered?
+      destroy
+    else
+      set_delivered
+    end
+  end
 end

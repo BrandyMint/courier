@@ -35,9 +35,7 @@ class Courier::Service::Base
   end
 
   def check_args owner, template, args
-    args[:owner]  ||=owner
-    args[:service]||=self
-    args[:text]   ||=template.get_text(args)
+    # args[:text]||=template.get_text(self, args)
   end
 
   def message(owner, template, args)
@@ -63,7 +61,7 @@ class Courier::Service::Base
 
   def deliver_all!
     messages.fresh.each do |message|
-      deliver_message(message) and message.set_delivered
+      deliver_message(message) and message.mark_as_delivered!
     end
   end
 end

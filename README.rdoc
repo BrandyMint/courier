@@ -48,7 +48,11 @@ Gemfile:
 отправил, а если сообщения собираются для дальнейшей отправки, то
 осуществляется эта доставка так:
 
-    Courier.deliver_all!
+    Courier.deliver_all! # Запускает доставку по всем сервисам
+
+Для каждого сервиса можно запускать доставку отдельно:
+
+    Courier.service(:facebook).deliver_all!
 
 == Сервисы
 
@@ -74,7 +78,7 @@ Gemfile:
 
     def deliver_all!
       messages.fresh.each do |message|
-        send_message_my_way(message.owner, message.text) and message.set_delivered
+        send_message_my_way(message.owner, message.text) and message.mark_as_delivered!
       end
     end
 
@@ -92,7 +96,6 @@ Gemfile:
     def message(owner, template, args)
       send_message_my_way owner, template.get_text(args)
     end
-
 
 
 == Contributing to courier

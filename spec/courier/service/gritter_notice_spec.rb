@@ -7,7 +7,7 @@ describe Courier::Service::GritterNotice do
       args={:a=>1}
       owner = double
       template = double :name=>:template_key
-      owner.should_receive(:gritter_notice).with(template.name, args)
+      owner.should_receive(:gritter_notice).with(template.name, "translation missing: en.courier.gritter_notice.template_key")
       subject.message owner, template, args
     end
   end
