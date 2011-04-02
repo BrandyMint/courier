@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{courier}
-  s.version = "0.1.1"
+  s.version = "0.1.2"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Danil Pismenny"]
@@ -38,6 +38,7 @@ Gem::Specification.new do |s|
     "lib/courier/service/gritter_notice.rb",
     "lib/courier/template/base.rb",
     "lib/generators/courier_generator.rb",
+    "lib/generators/templates/courier.rb",
     "lib/generators/templates/migration.rb",
     "spec/courier/config_spec.rb",
     "spec/courier/message_spec.rb",
