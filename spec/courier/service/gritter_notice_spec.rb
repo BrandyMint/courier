@@ -6,8 +6,8 @@ describe Courier::Service::GritterNotice do
     it 'send message to gritter_notice' do
       args={:a=>1}
       owner = double
-      template = double :key=>:template_key
-      owner.should_receive(:gritter_notice).with(template.key,args)
+      template = double :name=>:template_key
+      owner.should_receive(:gritter_notice).with(template.name, args)
       subject.message owner, template, args
     end
   end
