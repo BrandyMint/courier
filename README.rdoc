@@ -11,15 +11,19 @@ Courier. Courier On Rails.
 
 Courier - Система управления пользовательскими оповещениями и подписоками.
 
-== Интерфейс
+== Установка
 
-В модели пользователя:
+Gemfile:
 
-  class User << ActiveRecord::Base
-    has_courier
-    ...
+   gem 'courier'
 
-В config/initializers/courier.rb регистрируем используемые сервисы, шаблоны и их значения по умолчанию:
+Создание миграции и конфигцарции <tt>./config/initializers/courier.rb</tt>
+
+   rails g courier
+
+   rake db:migrate
+
+В <tt>config/initializers/courier.rb</tt> регистрируем используемые сервисы, шаблоны и их значения по умолчанию:
 
     Courier.init do |d|
       d.services                       :active_mailer, :gritter_notice, :facebook
@@ -27,6 +31,14 @@ Courier - Система управления пользовательскими
       d.template :avatar_loaded,       :on,            :off,             :on
       d.template :weekly_subscription, :on,            :on,              :on
     end
+
+В модели пользователя:
+
+  class User << ActiveRecord::Base
+    has_courier
+    ...
+
+== Использование
 
 Посылаем пользователю сообщение по шаблону <tt>:import_complete<tt> во все разрешенные сервисы
 

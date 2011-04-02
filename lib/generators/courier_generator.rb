@@ -2,6 +2,8 @@ require 'rails/generators'
 require 'rails/generators/migration'
 
 class CourierGenerator < Rails::Generators::Base
+  desc "This generator creates an initializer file at config/initializers/courier.rb and migration file."
+
   include Rails::Generators::Migration
 
   def self.source_root
@@ -20,4 +22,8 @@ class CourierGenerator < Rails::Generators::Base
     migration_template 'migration.rb', 'db/migrate/create_courier_tables.rb'
   end
 
+  def create_initializer_file
+    copy_file "courier.rb", "config/initializers/courier.rb"
+    # create_file "config/initializers/courier.rb", "# Add initialization content here"
+  end
 end
