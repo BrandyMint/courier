@@ -18,7 +18,7 @@ class Courier::Service::GritterNotice < Courier::Service::Base
   #
 
   def message(owner, template, options)
-    scope = [:courier, :services, :gritter_notice]
+    scope = [:courier, :services, :gritter_notice, :templates]
     opt = I18n::translate(template.name, :scope=>scope)
     opt.merge!(options)
     opt[:text]||=I18n::translate([template.name,:text], opt.merge(:scope=>scope) )

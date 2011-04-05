@@ -7,7 +7,7 @@ describe Courier::Service::GritterNotice do
       args={:a=>1}
       owner = double
       template = double :name=>:template_key
-      I18n.should_receive(:translate).with(template.name, :scope=>[:courier, :services, :gritter_notice]) {{:text=>'text of translation', :level=>:warning} }
+      I18n.should_receive(:translate).with(template.name, :scope=>[:courier, :services, :gritter_notice, :templates]) {{:text=>'text of translation', :level=>:warning} }
       owner.should_receive(:gritter_notice).with(template.name, {:text=>"text of translation", :a=>1, :level=>:warning})
       subject.message owner, template, args
     end
