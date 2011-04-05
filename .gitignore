@@ -45,3 +45,4 @@ pkg
 /.emacs.desktop
 /.emacs.desktop.lock
 /Gemfile.lock
+/.rvmrc

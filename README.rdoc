@@ -28,9 +28,11 @@ Gemfile:
     Courier.init do |d|
       d.services                       :active_mailer, :gritter_notice, :facebook
       d.template :import_complete,     :off,           :on,              :off
-      d.template :avatar_loaded,       :on,            :off,             :on
-      d.template :weekly_subscription, :on,            :on,              :on
+      d.template :avatar_loaded,       :on,            :off,             :disabled
+      d.template :weekly_subscription, :on,            :on,              :disabled
     end
+
+Где :on и :off это значения по умолчанию, а :disabled - полный запрет на установку этого параметра пользователем (:off по умолчанию)
 
 В модели пользователя:
 
