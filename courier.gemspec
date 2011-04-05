@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{courier}
-  s.version = "0.1.5"
+  s.version = "0.2.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Danil Pismenny"]
-  s.date = %q{2011-04-02}
+  s.date = %q{2011-04-05}
   s.description = %q{Система управления пользовательскими оповещениями и подписками}
   s.email = %q{danil@orionet.ru}
   s.extra_rdoc_files = [
@@ -25,6 +25,10 @@ Gem::Specification.new do |s|
     "README.rdoc",
     "Rakefile",
     "VERSION",
+    "app/controllers/courier_settings_controller.rb",
+    "app/helpers/courier_settings_helper.rb",
+    "app/views/courier_settings/set.html.haml",
+    "config/routes.rb",
     "courier.gemspec",
     "lib/courier.rb",
     "lib/courier/config.rb",
@@ -40,6 +44,7 @@ Gem::Specification.new do |s|
     "lib/generators/courier_generator.rb",
     "lib/generators/templates/courier.rb",
     "lib/generators/templates/migration.rb",
+    "spec/controllers/courier_settings_controller_spec.rb",
     "spec/courier/config_spec.rb",
     "spec/courier/message_spec.rb",
     "spec/courier/owner_setting_spec.rb",
@@ -50,7 +55,9 @@ Gem::Specification.new do |s|
     "spec/courier/template/base_spec.rb",
     "spec/courier_spec.rb",
     "spec/examples/example1_spec.rb",
+    "spec/helpers/courier_settings_helper_spec.rb",
     "spec/spec_helper.rb",
+    "spec/support/application_controller.rb",
     "spec/support/factories.rb",
     "spec/support/gems_simulation.rb",
     "spec/support/migration.rb",
@@ -63,6 +70,7 @@ Gem::Specification.new do |s|
   s.rubygems_version = %q{1.5.0}
   s.summary = %q{Система управления пользовательскими оповещениями и подписками}
   s.test_files = [
+    "spec/controllers/courier_settings_controller_spec.rb",
     "spec/courier/config_spec.rb",
     "spec/courier/message_spec.rb",
     "spec/courier/owner_setting_spec.rb",
@@ -73,7 +81,9 @@ Gem::Specification.new do |s|
     "spec/courier/template/base_spec.rb",
     "spec/courier_spec.rb",
     "spec/examples/example1_spec.rb",
+    "spec/helpers/courier_settings_helper_spec.rb",
     "spec/spec_helper.rb",
+    "spec/support/application_controller.rb",
     "spec/support/factories.rb",
     "spec/support/gems_simulation.rb",
     "spec/support/migration.rb",
@@ -85,8 +95,7 @@ Gem::Specification.new do |s|
     s.specification_version = 3
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
-      s.add_runtime_dependency(%q<activerecord>, ["~> 3.0"])
-      s.add_runtime_dependency(%q<actionpack>, ["~> 3.0"])
+      s.add_runtime_dependency(%q<rails>, ["~> 3.0"])
       s.add_runtime_dependency(%q<state_machine>, ["~> 0.10.2"])
       s.add_development_dependency(%q<pg>, [">= 0"])
       s.add_development_dependency(%q<ruby-debug>, [">= 0"])
@@ -100,8 +109,7 @@ Gem::Specification.new do |s|
       s.add_development_dependency(%q<jeweler>, ["~> 1.5.2"])
       s.add_development_dependency(%q<rcov>, [">= 0"])
     else
-      s.add_dependency(%q<activerecord>, ["~> 3.0"])
-      s.add_dependency(%q<actionpack>, ["~> 3.0"])
+      s.add_dependency(%q<rails>, ["~> 3.0"])
       s.add_dependency(%q<state_machine>, ["~> 0.10.2"])
       s.add_dependency(%q<pg>, [">= 0"])
       s.add_dependency(%q<ruby-debug>, [">= 0"])
@@ -116,8 +124,7 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<rcov>, [">= 0"])
     end
   else
-    s.add_dependency(%q<activerecord>, ["~> 3.0"])
-    s.add_dependency(%q<actionpack>, ["~> 3.0"])
+    s.add_dependency(%q<rails>, ["~> 3.0"])
     s.add_dependency(%q<state_machine>, ["~> 0.10.2"])
     s.add_dependency(%q<pg>, [">= 0"])
     s.add_dependency(%q<ruby-debug>, [">= 0"])
