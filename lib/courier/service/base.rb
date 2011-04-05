@@ -47,6 +47,10 @@ class Courier::Service::Base
     name
   end
 
+  def to_label
+    I18n::translate(:label, :scope=>[:courier, :services, name] )
+  end
+
   def name
     self.class.name.demodulize.underscore.to_sym
   end

@@ -4,9 +4,8 @@ require "bundler/setup"
 
 ENV["RAILS_ENV"] ||= 'test'
 
-require 'active_record'
-require 'action_view'
-require 'action_controller'
+require 'rails/all'
+
 require 'state_machine'
 
 require 'rspec'
@@ -14,18 +13,13 @@ require 'rspec/rails'
 require 'shoulda'
 require 'factory_girl'
 
-# require 'nulldb_rspec'
-# include NullDB::RSpec::NullifiedDatabase
-
 ActiveRecord::Base.establish_connection(
   :adapter => 'sqlite3',
   :database => ":memory:"
-   # :adapter => 'postgresql',
-   # :database => "courier_test"
 
   )
 
-#ActiveRecord::Base.logger = Logger.new(File.open('log/database.log', 'a'))
+class Application < Rails::Application; end
 
 require 'lib/generators/templates/migration'
 CreateCourierTables.migrate :up
@@ -39,6 +33,10 @@ end
 require 'courier'
 
 Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each {|f| require f}
+
+require 'config/routes'
+require 'app/controllers/courier_settings_controller'
+require 'app/helpers/courier_settings_helper'
 
 RSpec.configure do |config|
   config.use_transactional_fixtures = true

@@ -6,7 +6,7 @@ describe 'Initialize Courier' do
       d.services                       :active_mailer, :gritter_notice, :facebook
       d.template :import_complete,     :off,           :on,              :off
       d.template :avatar_loaded,       :on,            :off,             :on
-      d.template :weekly_subscription, :on,            :on,              :on
+      d.template :weekly_subscription, :on,            :on,              :disabled
     end
   end
 
@@ -24,7 +24,7 @@ describe 'Initialize Courier' do
 
     Courier.template(:weekly_subscription).get(:active_mailer).should  == :on
     Courier.template(:weekly_subscription).get(:gritter_notice).should == :on
-    Courier.template(:weekly_subscription).get(:facebook).should       == :on
+    Courier.template(:weekly_subscription).get(:facebook).should       == :disabled
   end
 
   describe 'users settings' do
@@ -42,20 +42,20 @@ describe 'Initialize Courier' do
 
       user.courier.get(:weekly_subscription, :active_mailer).should  == :on
       user.courier.get(:weekly_subscription, :gritter_notice).should == :on
-      user.courier.get(:weekly_subscription, :facebook).should       == :on
+      user.courier.get(:weekly_subscription, :facebook).should       == :disabled
     end
 
     describe 'override' do
       before do
         user.courier.set(:import_complete, :active_mailer,     :on)
         user.courier.set(:avatar_loaded, :active_mailer,       :off)
-        user.courier.set(:weekly_subscription, :active_mailer, :on)
+        user.courier.set(:weekly_subscription, :facebook,      :on)
       end
 
       specify 'users default settings are equal to system' do
         user.courier.get(:import_complete, :active_mailer).should      == :on
         user.courier.get(:avatar_loaded, :active_mailer).should        == :off
-        user.courier.get(:weekly_subscription, :active_mailer).should  == :on
+        user.courier.get(:weekly_subscription, :facebook).should       == :disabled
       end
     end
   end

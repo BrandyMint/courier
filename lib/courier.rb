@@ -23,11 +23,13 @@ module Courier
       end
     end
 
-    def template(name)
-      config.get_template(name)
+    def template(key)
+      return key if key.is_a?(Courier::Template::Base)
+      config.get_template(key)
     end
 
     def service(name)
+      return name if name.is_a?(Courier::Service::Base)
       config.get_service(name)
     end
   end

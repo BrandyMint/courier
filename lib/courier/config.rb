@@ -1,12 +1,17 @@
 # -*- coding: utf-8 -*-
 
 class Courier::Config
-  attr_accessor :services_hash, :templates_hash, :services_order
+  attr_accessor :services_hash, :templates_hash, :services_order, :templates_order
 
   def initialize
     self.services_order=[]
     self.services_hash={}
+    self.templates_order=[]
     self.templates_hash={}
+  end
+
+  def templates
+    templates_order
   end
 
   def services *services
@@ -32,7 +37,7 @@ class Courier::Config
       service = services_order[index] or "Too many values (#{index}), no such services"
       template.set(service, val)
     end
-
+    templates_order << template
     templates_hash[template.name] = template
   end
 

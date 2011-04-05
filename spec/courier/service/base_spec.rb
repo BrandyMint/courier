@@ -16,6 +16,8 @@ describe Courier::Service::Base do
     end
   end
 
+  its(:to_label) { should == 'translation missing: en.courier.services.base.label' }
+
   # inherited in subclasses
   describe '#deliver!' do
   end

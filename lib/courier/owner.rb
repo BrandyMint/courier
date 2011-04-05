@@ -27,7 +27,7 @@ module Courier::Owner
       template = Courier.template(template_key)
       Courier.config.services_order.select do |service|
         create_courier unless courier
-        courier.enabled?(template, service, args) and service.message(self, template, args)
+        courier.on?(template, service, args) and service.message(self, template, args)
       end
     end
   end

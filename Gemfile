@@ -1,7 +1,8 @@
 source "http://rubygems.org"
 
-gem 'activerecord', "~> 3.0"
-gem 'actionpack', "~> 3.0"
+# gem 'activerecord', "~> 3.0"
+# gem 'actionpack', "~> 3.0"
+gem 'rails', '~> 3.0'
 gem 'state_machine', "~> 0.10.2"
 
 # Add dependencies to develop your gem here.

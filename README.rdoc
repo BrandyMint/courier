@@ -54,6 +54,21 @@ Gemfile:
 
     Courier.service(:facebook).deliver_all!
 
+== Персональные настройки
+
+У каждого пользователя есть персональные настройки для матрицы
+шаблон-сервис. По умолчанию они такие, какие указаны в Courier.init
+Установить собственное значение можно так:
+
+   user.courier.set(:import_complete, :facebook, :on)  # или :off
+
+Где <tt>:import_complete</tt> - название шаблона, а <tt>:facebook</tt> название сервиса.
+
+Узнать значение:
+
+   user.courier.get(:import_complete, :facebook)  # Вернет :on или :off
+   user.courier.enabled?(:import_complete, :facebook) # Вернет true или false
+
 == Сервисы
 
 На данный момент реализованы сервисы:
