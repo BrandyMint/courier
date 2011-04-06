@@ -18,10 +18,14 @@ class Courier::Service::Facebook < Courier::Service::Base
     token = message.owner.facebook_token or raise "owner's facebook_token is empty"
 
     unless args = message.options[:facebook_properties]
-      args = message.options.slice(:from, :to, :picture, :link, :name, :caption, :message,
-        :description, :source, :icon, :attribution, :actions, :privacy, :targeting)
+      args = message.options.slice(:from, :to, :picture,
+        :link, :name, :caption, :description,
+        :message,
+        :source, :icon, :attribution, :actions, :privacy, :targeting)
     end
     args[:message] ||= message.options[:text] || Courier.template(message.template).get_text(message.service, message.options)
+
+    # Это post_on_wall
     Koala::Facebook::GraphAPI.new(token).put_object(args[:to] || 'me', "feed", args)
   end
 end

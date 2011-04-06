@@ -1,13 +1,9 @@
 # -*- coding: utf-8 -*-
 
-
-# # Courier::Sender (extenstion для AR-модели пользователя-отправителя)
-
-# Подключается через `acts_as_sender` дает модели метод `message(key, options)`. Пример вызова:
-
+# Подключается через `has_courier` дает модели метод `message(key, options)`. Пример вызова:
+#
 # @@@
-# user.notify :comments_in_my_plan, :comments=>@comments, :level=>:success
-# user.notify_failure :cant_import_plans, :provider=>:facebook
+# user.message :comments_in_my_plan, :comments=>@comments, :level=>:success
 # @@@
 
 
