@@ -2,6 +2,9 @@
 
 class Courier::Service::Facebook < Courier::Service::Base
 
+  FACEBOOK_PROPERTY_ATTRS = [:from, :to, :picture, :link, :name, :caption, :description, :message,
+    :source, :icon, :attribution, :actions, :privacy, :targeting]
+
   def initialize
     raise "No Koala defined. Add gem 'koala' to your Gemfile. " unless defined? Koala
     attr_accessor={}
@@ -15,23 +18,20 @@ class Courier::Service::Facebook < Courier::Service::Base
   def deliver_message(message)
     return true unless message.owner.facebook_id
 
-    #
-    # Get's token
-    #
-    message.owner.respond_to?(:facebook_token) or
-      raise "method facebook_token is not defined in your owner's model #{owner.class}"
-    token = message.owner.facebook_token
+    args = message.options[:facebook_properties] || message.options.slice(FACEBOOK_PROPERTY_ATTRS)
 
-    unless args = message.options[:facebook_properties]
-      args = message.options.slice(:from, :to, :picture,
-        :link, :name, :caption, :description,
-        :message,
-        :source, :icon, :attribution, :actions, :privacy, :targeting)
-    end
-    args[:message] ||= message.options[:text] || Courier.template(message.template).get_text(message.service, message.options)
+    args[:message] ||= message.options[:text] || Courier.template(message.template).
+      get_text(message.service, message.options)
+
+    token = args[:token]
+    token ||= message.owner.facebook_token if message.owner.respond_to?(:facebook_token)
+
+    return nil unless token
+
+    to = args[:to] || (message.owner.respond_to?(:facebook_id) ? message.owner.facebook_id : nil) || 'me'
 
     # Settings.omniauth.facebook.app_id, Settings.omniauth.facebook.secret
     # Это post_on_wall
-    Koala::Facebook::GraphAPI.new(token).put_object(args[:to] || message.owner.facebook_id, "feed", args)
+    Koala::Facebook::GraphAPI.new(token).put_object(to, "feed", args)
   end
 end

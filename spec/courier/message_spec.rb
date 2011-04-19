@@ -7,5 +7,5 @@ describe Courier::Message do
 
   it { should validate_presence_of(:owner) }
   it { should validate_presence_of(:service) }
-  it { should validate_presence_of(:template2) }
+  it { should validate_presence_of(:template) }
 end

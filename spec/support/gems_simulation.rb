@@ -5,7 +5,8 @@ module GritterNotices end
 
 module Koala
   module Facebook
-    module GraphAPI end
+    class GraphAPI
     end
+  end
 end
 
