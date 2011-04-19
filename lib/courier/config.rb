@@ -26,7 +26,7 @@ class Courier::Config
 
   def get_service name
     name=name.to_sym
-    services_hash[name] or raise "No such service '#{name}'"
+    services_hash[name] or raise "No such service '#{name}'. Specify it by Courier.init in ./config/initializers/courier.rb"
   end
 
   def template name, *sets
@@ -42,7 +42,7 @@ class Courier::Config
   end
 
   def get_template key
-    templates_hash[key.to_sym] or raise "No such template '#{key}'"
+    templates_hash[key.to_sym] or raise "No such template '#{key}'. Specify it by Courier.init in ./config/initializers/courier.rb"
   end
 
   def class_of_service(name)

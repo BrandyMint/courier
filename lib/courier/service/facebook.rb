@@ -13,9 +13,14 @@ class Courier::Service::Facebook < Courier::Service::Base
   # http://developers.facebook.com/docs/reference/api/post/
   #
   def deliver_message(message)
+    return true unless message.owner.facebook_id
+
+    #
+    # Get's token
+    #
     message.owner.respond_to?(:facebook_token) or
       raise "method facebook_token is not defined in your owner's model #{owner.class}"
-    token = message.owner.facebook_token or raise "owner's facebook_token is empty"
+    token = message.owner.facebook_token
 
     unless args = message.options[:facebook_properties]
       args = message.options.slice(:from, :to, :picture,
@@ -25,7 +30,8 @@ class Courier::Service::Facebook < Courier::Service::Base
     end
     args[:message] ||= message.options[:text] || Courier.template(message.template).get_text(message.service, message.options)
 
+    # Settings.omniauth.facebook.app_id, Settings.omniauth.facebook.secret
     # Это post_on_wall
-    Koala::Facebook::GraphAPI.new(token).put_object(args[:to] || 'me', "feed", args)
+    Koala::Facebook::GraphAPI.new(token).put_object(args[:to] || message.owner.facebook_id, "feed", args)
   end
 end
