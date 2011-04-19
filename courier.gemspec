@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{courier}
-  s.version = "0.2.1"
+  s.version = "0.2.3"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Danil Pismenny"]
-  s.date = %q{2011-04-05}
+  s.date = %q{2011-04-19}
   s.description = %q{Система управления пользовательскими оповещениями и подписками}
   s.email = %q{danil@orionet.ru}
   s.extra_rdoc_files = [
@@ -67,7 +67,7 @@ Gem::Specification.new do |s|
   s.homepage = %q{http://github.com/dapi/courier}
   s.licenses = ["MIT"]
   s.require_paths = ["lib"]
-  s.rubygems_version = %q{1.6.1}
+  s.rubygems_version = %q{1.6.2}
   s.summary = %q{Система управления пользовательскими оповещениями и подписками}
   s.test_files = [
     "spec/controllers/courier_settings_controller_spec.rb",

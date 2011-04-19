@@ -16,8 +16,6 @@ class Courier::Service::Facebook < Courier::Service::Base
   # http://developers.facebook.com/docs/reference/api/post/
   #
   def deliver_message(message)
-    return true unless message.owner.facebook_id
-
     args = message.options[:facebook_properties] || message.options.slice(FACEBOOK_PROPERTY_ATTRS)
 
     args[:message] ||= message.options[:text] || Courier.template(message.template).
@@ -26,7 +24,7 @@ class Courier::Service::Facebook < Courier::Service::Base
     token = args[:token]
     token ||= message.owner.facebook_token if message.owner.respond_to?(:facebook_token)
 
-    return nil unless token
+    return true unless token
 
     to = args[:to] || (message.owner.respond_to?(:facebook_id) ? message.owner.facebook_id : nil) || 'me'
 
