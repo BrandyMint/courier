@@ -2,7 +2,7 @@ source "http://rubygems.org"
 
 # gem 'activerecord', "~> 3.0"
 # gem 'actionpack', "~> 3.0"
-gem 'rails', '~> 3.0'
+gem 'rails', '~> 3.0.0'
 gem 'state_machine', "~> 0.10.2"
 
 # Add dependencies to develop your gem here.
@@ -16,7 +16,7 @@ group :development, :test do
   gem "shoulda", ">= 0"
   gem "rspec", "~> 2.5"
   gem "rspec-rails"
-  gem "bundler", "~> 1.0.0"
-  gem "jeweler", "~> 1.5.2"
+  gem "bundler"
+  gem "jeweler"
   gem "rcov", ">= 0"
 end

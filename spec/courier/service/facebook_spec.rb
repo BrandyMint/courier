@@ -25,6 +25,8 @@ describe Courier::Service::Facebook do
     it 'do nothing if there is no token' do
       Koala::Facebook::GraphAPI.should_not_receive(:new)
 
+      message.should_receive :mark_as_delivered!
+
       subject.stub_chain('messages.fresh') { [message] }
       subject.deliver_all!
     end
