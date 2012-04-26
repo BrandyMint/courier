@@ -1,48 +1,57 @@
 # -*- coding: utf-8 -*-
 module Courier
-  require 'courier/owner_setting'
-  require 'courier/config'
-  module Service
-    require 'courier/service/base'
-    Dir["#{File.dirname(__FILE__)}/courier/service/**/*.rb"].each {|f| require f}
-  end
-  module Template
-    require 'courier/template/base'
+  def self.table_name_prefix
+    'courier_'
   end
 
-  class << self
-    cattr_accessor :config
+  def self.get name
+    Courier::Subscription::Base.find_by_name name
+  end
 
-    def init
-      yield self.config = Courier::Config.new
-    end
+  def self.get! name
+    sub = get name
+    raise "Can't find subscription #{name}" unless sub
 
-    def deliver_all!
-      config.services.each do |service|
-        service.deliver_all!
-      end
-    end
+    return sub
+  end
 
-    def template(key)
-      return key if key.is_a?(Courier::Template::Base)
-      config.get_template(key)
-    end
+  # name - имя рассылки
+  # resource - ресурс к которому привязана рассылка
+  # object - объект рассылки
+  #
+  # Например рассылка по новостям, связанным с компанией:
+  #
+  #   Courier.notify :company_news, company, news_item
+  #
+  def self.notify name, resource=nil, params={} #, *args
+    s = get name
+    raise "Пытаемся оповестить рассылку которой не существует #{name}" unless s
+    s.notify resource, params
+  end
 
-    def service(name)
-      return name if name.is_a?(Courier::Service::Base)
-      config.get_service(name)
-    end
+  def self.create name, klass=Courier::Subscription::Base, &block
+    puts "Create subscription: #{name}"
+    s = Courier.get( name ) || klass.new( :name=>name )
+    d = Courier::DSL.new s
+    d.instance_exec &block
+    s.save!
+  end
+
+  def self.subscribe user, sub_name, resource=nil, *args
+    user.subscribe sub_name, resource, *args
+  end
+
+  def self.unsubscribe user, sub_name, resource=nil, *args
+    user.unsubscribe sub_name, resource, *args
+  end
+
+  module Subscription
+
   end
 end
 
-require 'courier/message'
+require 'courier/active_record_ext'
+ActiveRecord::Base.extend Courier::ActiveRecordExt
 
-require 'courier/owner'
-ActiveRecord::Base.send(:extend, Courier::Owner )
-
-#require 'gritter_notices/view_helpers' ActionView::Base.send(:include, GritterNotices::ViewHelpers )
-# require 'gritter_notices/rspec_matcher'
-
-require 'courier/engine' if defined?(Rails)
-
-
+require 'courier/dsl'
+require 'courier/engine'

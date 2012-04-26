@@ -1,127 +1,19 @@
-= Courier
+= courier
 
-{<img src="http://travis-ci.org/dapi/courier.png" />}[http://travis-ci.org/dapi/courier]
-
-Давным давно, в одной далекой-предалекой галактике, был такой модем USR Courier,
-он хорошо держал карриер и был мечтой каждого фидошника. А сейчас чтобы получать
-много не нужных писем достаточно зарегистрироваться на еще одной социальной
-сети.
-
-Чтобы помочь социальной сети справиться с большим количеством видов подписок и
-оповещений, а пользователю настроить способы их доставки мы разработали плагин
-Courier. Courier On Rails.
-
-Courier - Система управления пользовательскими оповещениями и подписоками.
-
-== Установка
-
-Gemfile:
-
-   gem 'courier'
-
-Создание миграции и конфигцарции <tt>./config/initializers/courier.rb</tt>
-
-   rails g courier
-
-   rake db:migrate
-
-В <tt>config/initializers/courier.rb</tt> регистрируем используемые сервисы, шаблоны и их значения по умолчанию:
-
-    Courier.init do |d|
-      d.services                       :active_mailer, :gritter_notice, :facebook
-      d.template :import_complete,     :off,           :on,              :off
-      d.template :avatar_loaded,       :on,            :off,             :disabled
-      d.template :weekly_subscription, :on,            :on,              :disabled
-    end
-
-Где :on и :off это значения по умолчанию, а :disabled - полный запрет на установку этого параметра пользователем (:off по умолчанию)
-
-В модели пользователя:
-
-  class User << ActiveRecord::Base
-    has_courier
-    ...
-
-== Использование
-
-Посылаем пользователю сообщение по шаблону <tt>:import_complete<tt> во все разрешенные сервисы
-
-    user.message :import_complete, {:some=>'arguments in hash'}
-
-Если сервис отправляет сообщение в реальном времени, то он его уже
-отправил, а если сообщения собираются для дальнейшей отправки, то
-осуществляется эта доставка так:
-
-    Courier.deliver_all! # Запускает доставку по всем сервисам
-
-Для каждого сервиса можно запускать доставку отдельно:
-
-    Courier.service(:facebook).deliver_all!
-
-== Персональные настройки
-
-У каждого пользователя есть персональные настройки для матрицы
-шаблон-сервис. По умолчанию они такие, какие указаны в Courier.init
-Установить собственное значение можно так:
-
-   user.courier.set(:import_complete, :facebook, :on)  # или :off
-
-Где <tt>:import_complete</tt> - название шаблона, а <tt>:facebook</tt> название сервиса.
-
-Узнать значение:
-
-   user.courier.get(:import_complete, :facebook)  # Вернет :on или :off
-   user.courier.enabled?(:import_complete, :facebook) # Вернет true или false
-
-== Сервисы
-
-На данный момент реализованы сервисы:
-
-* Courier::Service::GritterNotice - отправка сообщений через gritter_notices[http://github.com/dapi/gritter_notices]
-* Courier::Service::ActionMailer  - TODO
-* Courier::Service::MailChimp     - TODO
-* Courier::Service::Facebook      - Использует Koala[https://github.com/arsduo/koala]
-
-== Свой сервис
-
-Все сервисы наследуютсяо от <tt>Courier::Service::Base</tt>. Последнее
-имя класс автоматически становится именем этого сервиса через
-<tt>demodulize.underscore</tt>. Всего нужно имплементировать 2 метода:
-
-* message(owner, template, args)
-* deliver!
-
-=== Сервис отложенной отправки
-
-Достаточно реализовать метод <tt>deliver_all!</tt> или <tt>deliver_message</tt>, так как +message+ удачно складывает все сообщения в базу. Например:
-
-    def deliver_all!
-      messages.fresh.each do |message|
-        send_message_my_way(message.owner, message.text) and message.mark_as_delivered!
-      end
-    end
-
-или
-
-    def deliver_message(message)
-      send_message_my_way(message.owner, message.text)
-      # returns true to mark message as delivered
-    end
-
-=== Сервис отправки в реальном времени
-
-Достаточно реализоват метод +message+. Например:
-
-    def message(owner, template, args)
-      send_message_my_way owner, template.get_text(args)
-    end
-
+Description goes here.
 
 == Contributing to courier
-
-* Yes, please.
+ 
+* Check out the latest master to make sure the feature hasn't been implemented or the bug hasn't been fixed yet
+* Check out the issue tracker to make sure someone already hasn't requested it and/or contributed it
+* Fork the project
+* Start a feature/bugfix branch
+* Commit and push until you are happy with your contribution
+* Make sure to add tests for it. This is important so I don't break it in a future version unintentionally.
+* Please try not to mess with the Rakefile, version, or history. If you want to have your own version, or is otherwise necessary, that is fine, but please isolate to its own commit so I can cherry-pick around it.
 
 == Copyright
 
-Copyright (c) 2011 Danil Pismenny.
+Copyright (c) 2012 Danil Pismenny. See LICENSE.txt for
+further details.
 
