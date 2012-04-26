@@ -9,8 +9,8 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Danil Pismenny"]
-  s.date = "2012-03-04"
-  s.description = "TODO: longer description of your gem"
+  s.date = "2012-04-26"
+  s.description = ""
   s.email = "danil@orionet.ru"
   s.extra_rdoc_files = [
     "LICENSE.txt",
@@ -18,11 +18,26 @@ Gem::Specification.new do |s|
     "README.rdoc"
   ]
   s.files = [
-    ".document",
     "Gemfile",
     "LICENSE.txt",
+    "README.md",
     "README.rdoc",
     "Rakefile",
+    "VERSION",
+    "app/assets/javascripts/courier.js",
+    "app/controllers/courier/subscribers_controller.rb",
+    "app/controllers/courier/subscriptions_controller.rb",
+    "app/helpers/courier_helper.rb",
+    "app/mailers/courier/mailer/base.rb",
+    "app/models/courier/log_entity.rb",
+    "app/models/courier/subscriber.rb",
+    "app/models/courier/subscription/base.rb",
+    "app/models/courier/subscription/common.rb",
+    "courier.gemspec",
+    "lib/courier.rb",
+    "lib/courier/active_record_ext.rb",
+    "lib/courier/dsl.rb",
+    "lib/courier/engine.rb",
     "test/helper.rb",
     "test/test_courier.rb"
   ]
@@ -30,27 +45,30 @@ Gem::Specification.new do |s|
   s.licenses = ["MIT"]
   s.require_paths = ["lib"]
   s.rubygems_version = "1.8.10"
-  s.summary = "TODO: one-line summary of your gem"
+  s.summary = "\u{420}\u{430}\u{441}\u{441}\u{44b}\u{43b}\u{43a}\u{438} \u{438} \u{43f}\u{43e}\u{434}\u{43f}\u{438}\u{441}\u{43a}\u{438} \u{434}\u{43b}\u{44f} \u{440}\u{435}\u{43b}\u{44c}\u{441}\u{43e}\u{432}\u{44b}\u{445} \u{43f}\u{440}\u{43e}\u{435}\u{43a}\u{442}\u{43e}\u{432}"
 
   if s.respond_to? :specification_version then
     s.specification_version = 3
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
       s.add_development_dependency(%q<shoulda>, [">= 0"])
-      s.add_development_dependency(%q<bundler>, ["~> 1.0.0"])
+      s.add_development_dependency(%q<bundler>, [">= 0"])
       s.add_development_dependency(%q<jeweler>, ["~> 1.6.4"])
-      s.add_development_dependency(%q<rcov>, [">= 0"])
+      s.add_development_dependency(%q<simplecov>, [">= 0"])
+      s.add_development_dependency(%q<simplecov-rcov>, [">= 0"])
     else
       s.add_dependency(%q<shoulda>, [">= 0"])
-      s.add_dependency(%q<bundler>, ["~> 1.0.0"])
+      s.add_dependency(%q<bundler>, [">= 0"])
       s.add_dependency(%q<jeweler>, ["~> 1.6.4"])
-      s.add_dependency(%q<rcov>, [">= 0"])
+      s.add_dependency(%q<simplecov>, [">= 0"])
+      s.add_dependency(%q<simplecov-rcov>, [">= 0"])
     end
   else
     s.add_dependency(%q<shoulda>, [">= 0"])
-    s.add_dependency(%q<bundler>, ["~> 1.0.0"])
+    s.add_dependency(%q<bundler>, [">= 0"])
     s.add_dependency(%q<jeweler>, ["~> 1.6.4"])
-    s.add_dependency(%q<rcov>, [">= 0"])
+    s.add_dependency(%q<simplecov>, [">= 0"])
+    s.add_dependency(%q<simplecov-rcov>, [">= 0"])
   end
 end
 
