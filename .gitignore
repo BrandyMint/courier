@@ -46,3 +46,6 @@ pkg
 /.emacs.desktop.lock
 /Gemfile.lock
 /.rvmrc
+
+# For idea
+.idea/
