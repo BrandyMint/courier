@@ -1,4 +1,6 @@
-##Полную документацию смотри на http://courier.icfdev.ru/
+## Полную документацию смотри на http://courier.icfdev.ru/
+
+## Build status [![Build Status](https://secure.travis-ci.org/dapi/courier.png)](http://travis-ci.org/dapi/courier)#
 
 ## Courier
 
