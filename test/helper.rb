@@ -1,5 +1,11 @@
 require 'rubygems'
 require 'bundler'
+
+#TODO: Вынести в код самого гема?
+require 'rails'
+require 'active_record'
+
+
 begin
   Bundler.setup(:default, :development)
 rescue Bundler::BundlerError => e
