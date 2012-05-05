@@ -4,7 +4,7 @@ class Courier::SubscriptionsController < ::ApplicationController
   before_filter :authorize_user!
 
   include CourierHelper
-  include BootstrapHelper
+  #include BootstrapHelper TODO: с ним не заводится, прекрасно работает и без него, удалить?
   include ActionView::Helpers::UrlHelper
 
   def create_and_activate

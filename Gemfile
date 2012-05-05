@@ -9,4 +9,5 @@ group :development do
   gem 'simplecov'
   gem 'simplecov-rcov'
   gem 'rspec'
+  gem 'sqlite3'
 end

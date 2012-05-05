@@ -1,24 +1,9 @@
-require 'rubygems'
-require 'bundler'
+# Configure Rails Environment
+ENV["RAILS_ENV"] = "test"
 
-#TODO: Вынести в код самого гема?
-require 'rails'
-require 'active_record'
+require File.expand_path("../dummy/config/environment.rb",  __FILE__)
+require "rails/test_help"
 
+Rails.backtrace_cleaner.remove_silencers!
 
-begin
-  Bundler.setup(:default, :development)
-rescue Bundler::BundlerError => e
-  $stderr.puts e.message
-  $stderr.puts "Run `bundle install` to install missing gems"
-  exit e.status_code
-end
-require 'test/unit'
 require 'shoulda'
-
-$LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
-$LOAD_PATH.unshift(File.dirname(__FILE__))
-require 'courier'
-
-class Test::Unit::TestCase
-end
