@@ -8,4 +8,5 @@ group :development do
   gem "jeweler", "~> 1.6.4"
   gem 'simplecov'
   gem 'simplecov-rcov'
+  gem 'rspec'
 end

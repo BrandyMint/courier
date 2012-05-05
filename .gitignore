@@ -49,3 +49,6 @@ pkg
 
 # For idea
 .idea/
+
+# For rvm
+.rvmrc
