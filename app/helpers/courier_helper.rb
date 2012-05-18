@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+
+include BootstrapHelper
+
 module CourierHelper
   def toggle_subscription_link resource, sub=:new_comment, *args
     return '' unless current_user
