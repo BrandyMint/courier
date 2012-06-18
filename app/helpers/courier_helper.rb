@@ -16,7 +16,16 @@ module CourierHelper
     if resource.is_a? Courier::Subscriber
       _toggle_subscription_link_for_subscriber resource
     else
-      create_subscription_link resource, sub
+      subscriber = Courier::Subscriber.where(
+          user_id: current_user.id,
+          resource_id: resource.id,
+          resource_type: resource.class
+      ).first
+      if subscriber.present?
+        deactivate_subscription_link subscriber
+      else
+        create_subscription_link resource, sub
+      end
     end
   end
 
