@@ -19,7 +19,7 @@ module CourierHelper
       subscriber = Courier::Subscriber.where(
           user_id: current_user.id,
           resource_id: resource.id,
-          resource_type: resource.class
+          resource_type: resource.class.model_name
       ).first
       if subscriber.present?
         deactivate_subscription_link subscriber
