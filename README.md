@@ -79,7 +79,43 @@ properties:
                           'test subjet', 
                           NewsItem.find(15761).comments.first
                          ).deliver
+                         
+                         
+## Создание новой подписки
 
+Вначале определяем подписку в lib/tasks/seed/courier.rake
+                         
+    Courier.create :user_posts do
+        description 'Новые посты пользователя' # заголовок, который будет отображаться в my.investcafe.ru/subscriptions
+        from 'Инвесткафе <no-reply@investcafe.ru>'
+        subject '%{user.name.to_s} написал новый пост %{post.title}' # тема письма
+        access :user #доступ к подписке, пользователи или админы
+      end
+
+Запускаем rake, чтобы подписка загрузилась в бд
+
+    rake icf:seed:courier
+
+Для формирования письма добавляем метод класса Courier::Mailer::Common, в app/mailers/courier/mailer/common.rb
+
+    def user_posts(context)
+      @post = context.post
+      @subscriber = context.subscriber
+
+      mail do |format|
+        format.html { render :user_posts }
+      end
+    end
+    
+либо используем уже готовый шаблон.
+
+Для вывода ссылки на подписку/отписку используйте хелпер
+
+    = toggle_subscription_link user, :user_posts
+
+первым параметром идет ресурс (на что подписываемся), потом идет название самой подписки.
+
+После первой подписки идем на страницу my.investcafe.ru/subscriptions и проверяем как отображаются вновь добавленные.
 
 ## TODO
 
