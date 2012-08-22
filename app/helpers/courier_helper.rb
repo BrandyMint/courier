@@ -3,6 +3,8 @@
 include BootstrapHelper
 
 module CourierHelper
+  attr_accessor :output_buffer
+
   def toggle_subscription_link resource, sub=:new_comment, *args
     return '' unless current_user
     content_tag :span, :rel=>:tooltip, :title=>t('subscription.tooltip'), :class=>'toggle-subscription' do
@@ -48,7 +50,9 @@ module CourierHelper
              :format => :json,
              :remote => true,
              :class  => 'toggle-subscription-link',
-             'data-type'=>:jsonp)].join(' ').html_safe
+             'data-type'=>:jsonp),
+      subscribers_count(subscriber.resource)
+    ].join(' ').html_safe
   end
 
   def create_subscription_link *args
@@ -60,7 +64,8 @@ module CourierHelper
         :format => :json,
         :remote => true,
         :class => 'toggle-subscription-link',
-        'data-type' => :jsonp)
+        'data-type' => :jsonp),
+      subscribers_count(*args[0])
     ].join(' ').html_safe
   end
 
@@ -73,7 +78,8 @@ module CourierHelper
         :format => :json,
         :remote =>true,
         :class =>'toggle-subscription-link',
-        'data-type' =>'jsonp')
+        'data-type' =>'jsonp'),
+      subscribers_count(subscriber.resource)
     ].join(' ').html_safe
   end
 
@@ -93,4 +99,12 @@ module CourierHelper
   def deactivate_subscription_url subscriber
     urls.deactivate_api_subscription_url subscriber, :json
   end
+
+  def subscribers_count resource
+    count = Courier::Subscriber.where('resource_id = ? AND resource_type = ?', resource.id, resource.class.name).count 
+    content_tag :span, :class=>'subscribers_count' do
+      "(#{count})"
+    end
+  end
 end
+
