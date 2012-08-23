@@ -1,4 +1,3 @@
-## Полную документацию смотри на http://courier.icfdev.ru/
 
 ## Build status [![Build Status](https://secure.travis-ci.org/dapi/courier.png)](http://travis-ci.org/dapi/courier)#
 
@@ -117,6 +116,6 @@ properties:
 
 После первой подписки идем на страницу my.investcafe.ru/subscriptions и проверяем как отображаются вновь добавленные.
 
-## TODO
+## Docs
 
-Доки: http://habrahabr.ru/blogs/ruby/138582/#habracut
+http://rubydoc.info/github/BrandyMint/courier/master/frames
