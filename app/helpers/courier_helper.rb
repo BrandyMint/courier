@@ -6,7 +6,9 @@ module CourierHelper
 
   def toggle_subscription_link resource, sub=:new_comment
     return '' unless current_user
-    content_tag :span, :rel=>:tooltip, :title=>t('subscription.tooltip'), :class=>'toggle-subscription' do
+    resource.is_a? Courier::Subscriber ? tooltip_class = resource.resource.class : tooltip_class = resource.class
+    tooltip = t ("subscription.tooltip.#{tooltip_class}"), :default => [t("subscription.tooltip.default")]
+    content_tag :span, :rel=>:tooltip, :title=>tooltip, :class=>'toggle-subscription' do
       _toggle_subscription_link resource, sub
     end
   end
