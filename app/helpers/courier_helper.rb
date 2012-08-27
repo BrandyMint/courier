@@ -3,7 +3,6 @@
 include BootstrapHelper
 
 module CourierHelper
-  include ActionView::Helpers::TagHelper
 
   def toggle_subscription_link resource, sub=:new_comment
     return '' unless current_user
