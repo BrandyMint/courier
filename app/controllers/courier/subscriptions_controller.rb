@@ -42,10 +42,10 @@ class Courier::SubscriptionsController < ::ApplicationController
 
   def subscriber
     @subscriber ||= if params[:id]
-                      current_user.subscribers.find_by_id( params[:id] )
-                    else
-                      current_user.subscribe( subscription, resource )
-                    end
+      current_user.user_subscribers.find_by_id( params[:id] )
+    else
+      current_user.subscribe( subscription, resource )
+    end
   end
 
   def resource

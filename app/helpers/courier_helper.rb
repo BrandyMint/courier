@@ -3,17 +3,17 @@
 include BootstrapHelper
 
 module CourierHelper
-  attr_accessor :output_buffer
+  include ActionView::Helpers::TagHelper
 
-  def toggle_subscription_link resource, sub=:new_comment, *args
+  def toggle_subscription_link resource, sub=:new_comment
     return '' unless current_user
     content_tag :span, :rel=>:tooltip, :title=>t('subscription.tooltip'), :class=>'toggle-subscription' do
-      _toggle_subscription_link resource, sub, *args
+      _toggle_subscription_link resource, sub
     end
   end
 
   # resource = resource or subscriber
-  def _toggle_subscription_link resource, sub=:new_comment, *args
+  def _toggle_subscription_link resource, sub=:new_comment
 
     if resource.is_a? Courier::Subscriber
       _toggle_subscription_link_for_subscriber resource
@@ -51,21 +51,21 @@ module CourierHelper
              :remote => true,
              :class  => 'toggle-subscription-link',
              'data-type'=>:jsonp),
-      subscribers_count(subscriber.resource)
+    subscribers_count(subscriber)
     ].join(' ').html_safe
   end
 
-  def create_subscription_link *args
+  def create_subscription_link resource, sub
     [
       icon('volume-off')+t('subscription.deactivated').html_safe,
       link_to(
         t('subscription.activate'),
-        create_subscription_url(*args),
+        create_subscription_url(resource, sub),
         :format => :json,
         :remote => true,
         :class => 'toggle-subscription-link',
         'data-type' => :jsonp),
-      subscribers_count(*args[0])
+      subscribers_count(resource, sub)
     ].join(' ').html_safe
   end
 
@@ -79,7 +79,7 @@ module CourierHelper
         :remote =>true,
         :class =>'toggle-subscription-link',
         'data-type' =>'jsonp'),
-      subscribers_count(subscriber.resource)
+      subscribers_count(subscriber)
     ].join(' ').html_safe
   end
 
@@ -100,11 +100,18 @@ module CourierHelper
     urls.deactivate_api_subscription_url subscriber, :json
   end
 
-  def subscribers_count resource
-    count = Courier::Subscriber.where('resource_id = ? AND resource_type = ?', resource.id, resource.class.name).count 
-    content_tag :span, :class=>'subscribers_count' do
-      "(#{count})"
+  def subscribers_count resource, sub=nil
+    if resource.is_a? Courier::Subscriber
+      subscription = resource.subscription
+      resource = resource.resource
+    else
+      subscription = Courier::Subscription::Base.find_by_name(sub)
     end
+    # здесь так потому что resource то может быть и nil
+    count = Courier::Subscriber.by_resource(resource).by_subscription(subscription).active.count
+    # если делать на хелперах вылазит ошибка undefined method `output_buffer='
+    # инклюдинг TagHelper дело не меняет, добавление атрибута output_buffer ломает тесты
+    "<span class='subscribers_count'>(#{count})</span>"
   end
 end
 

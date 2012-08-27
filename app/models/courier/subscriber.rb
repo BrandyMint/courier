@@ -16,6 +16,8 @@ class Courier::Subscriber < ActiveRecord::Base
     active.where(conditions)
   }
 
+  scope :by_subscription, lambda{ |subscription| where(subscription_id: subscription.id)}
+
   validates :user, :presence => true
   validates :subscription, :presence => true
   validates :token, presence: true, uniqueness: true

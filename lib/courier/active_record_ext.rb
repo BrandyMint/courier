@@ -5,7 +5,7 @@ module Courier::ActiveRecordExt
     extend ClassMethods
     include InstanceMethods
 
-    has_many :subscribers,
+    has_many :user_subscribers,
       :class_name => 'Courier::Subscriber',
       :dependent => :destroy
   end
