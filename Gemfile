@@ -1,6 +1,7 @@
 source "http://rubygems.org"
 
 gem "rails"
+gem 'twitter_bootstrap_helpers', :git => 'git://github.com/BrandyMint/twitter_bootstrap_helpers.git'
 
 group :development do
   gem "shoulda", ">= 0"

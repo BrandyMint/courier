@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Danil Pismenny"]
-  s.date = "2012-05-05"
+  s.date = "2012-09-04"
   s.description = ""
   s.email = "danil@orionet.ru"
   s.extra_rdoc_files = [
@@ -67,6 +67,7 @@ Gem::Specification.new do |s|
     "test/dummy/config/initializers/wrap_parameters.rb",
     "test/dummy/config/locales/en.yml",
     "test/dummy/config/routes.rb",
+    "test/dummy/db/test.sqlite3",
     "test/dummy/lib/assets/.gitkeep",
     "test/dummy/public/404.html",
     "test/dummy/public/422.html",
@@ -78,7 +79,7 @@ Gem::Specification.new do |s|
   s.homepage = "http://github.com/dapi/courier"
   s.licenses = ["MIT"]
   s.require_paths = ["lib"]
-  s.rubygems_version = "1.8.10"
+  s.rubygems_version = "1.8.24"
   s.summary = "\u{420}\u{430}\u{441}\u{441}\u{44b}\u{43b}\u{43a}\u{438} \u{438} \u{43f}\u{43e}\u{434}\u{43f}\u{438}\u{441}\u{43a}\u{438} \u{434}\u{43b}\u{44f} \u{440}\u{435}\u{43b}\u{44c}\u{441}\u{43e}\u{432}\u{44b}\u{445} \u{43f}\u{440}\u{43e}\u{435}\u{43a}\u{442}\u{43e}\u{432}"
 
   if s.respond_to? :specification_version then
@@ -86,6 +87,7 @@ Gem::Specification.new do |s|
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<rails>, [">= 0"])
+      s.add_runtime_dependency(%q<twitter_bootstrap_helpers>, [">= 0"])
       s.add_development_dependency(%q<shoulda>, [">= 0"])
       s.add_development_dependency(%q<bundler>, [">= 0"])
       s.add_development_dependency(%q<jeweler>, ["~> 1.6.4"])
@@ -95,6 +97,7 @@ Gem::Specification.new do |s|
       s.add_development_dependency(%q<sqlite3>, [">= 0"])
     else
       s.add_dependency(%q<rails>, [">= 0"])
+      s.add_dependency(%q<twitter_bootstrap_helpers>, [">= 0"])
       s.add_dependency(%q<shoulda>, [">= 0"])
       s.add_dependency(%q<bundler>, [">= 0"])
       s.add_dependency(%q<jeweler>, ["~> 1.6.4"])
@@ -105,6 +108,7 @@ Gem::Specification.new do |s|
     end
   else
     s.add_dependency(%q<rails>, [">= 0"])
+    s.add_dependency(%q<twitter_bootstrap_helpers>, [">= 0"])
     s.add_dependency(%q<shoulda>, [">= 0"])
     s.add_dependency(%q<bundler>, [">= 0"])
     s.add_dependency(%q<jeweler>, ["~> 1.6.4"])
