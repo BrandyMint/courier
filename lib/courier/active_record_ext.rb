@@ -37,7 +37,19 @@ module Courier::ActiveRecordExt
 
   end
 
-  def has_subscriptions
+  # примеры
+  # has_subscriptions :to_title
+  #
+  # has_subscriptions do
+  #   "Блог: #{name}"
+  # end
+
+  def has_subscriptions *args, &block
+    if block_given?
+      @courier_resource_label = block
+    else
+      @courier_resource_label = args.first
+    end
     has_many :subscribers,
       :class_name => 'Courier::Subscriber',
       :as => :resource,
