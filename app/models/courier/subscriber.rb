@@ -59,13 +59,13 @@ class Courier::Subscriber < ActiveRecord::Base
     # Подписка без ресурса
     return '' unless resource.present?
 
-    courier_resource_label = self.resource.class.instance_variable_get(:@courier_resource_label)
+    courier_resource_title = self.resource.class.instance_variable_get(:@courier_resource_title)
 
-    if courier_resource_label
-      if courier_resource_label.is_a?(Proc)
-        resource.instance_exec(&courier_resource_label)
+    if courier_resource_title
+      if courier_resource_title.is_a?(Proc)
+        resource.instance_exec(&courier_resource_title)
       else
-        resource.send(courier_resource_label)
+        resource.send(courier_resource_title)
       end
     else
       "#{resource.class}##{resource.id}"

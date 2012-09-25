@@ -44,12 +44,8 @@ module Courier::ActiveRecordExt
   #   "Блог: #{name}"
   # end
 
-  def has_subscriptions *args, &block
-    if block_given?
-      @courier_resource_label = block
-    else
-      @courier_resource_label = args.first
-    end
+  def has_subscriptions params={}
+    @courier_resource_title = params[:title]
     has_many :subscribers,
       :class_name => 'Courier::Subscriber',
       :as => :resource,
