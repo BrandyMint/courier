@@ -16,6 +16,10 @@ class Courier::Subscriber < ActiveRecord::Base
     active.where(conditions)
   }
 
+  scope :without_users, lambda{ |users|
+    where("user_id not in (#{users.map{|el| el.id}.join(',')})")
+  }
+
   scope :by_subscription, lambda{ |subscription| where(subscription_id: subscription.id)}
 
   validates :user, :presence => true

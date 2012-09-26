@@ -30,19 +30,8 @@ class Courier::Subscription::Base < ActiveRecord::Base
 
   def real_notify resource = nil, params={}
     list = collect_subscribers resource, params
-
     list.each do |subscriber|
-
-      if subscriber.is_a? Courier::Subscriber
-        safe_send_mail context_for_subscriber( resource, subscriber, params )
-
-      elsif subscriber.is_a? User
-
-        safe_send_mail context_for_user( subscriber, resource, params )
-
-      else
-        raise "Unknown subscriber type #{subscriber}"
-      end
+      safe_send_mail context_for_subscriber( resource, subscriber, params )
     end
   end
 
@@ -113,7 +102,9 @@ class Courier::Subscription::Base < ActiveRecord::Base
   end
 
   def collect_subscribers resource=nil, params={}
-    subscribers.by_resource resource
+    list = subscribers.by_resource resource
+    list = list.without_users params[:exclude_users] if params[:exclude_users]
+    list
   end
 
   def use_delay?
