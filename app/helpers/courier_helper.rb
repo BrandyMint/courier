@@ -19,11 +19,15 @@ module CourierHelper
     if resource.is_a? Courier::Subscriber
       _toggle_subscription_link_for_subscriber resource
     else
-      subscriber = Courier::Subscriber.where(
-          user_id: current_user.id,
-          resource_id: resource.id,
-          resource_type: resource.class.model_name
-      ).first
+      subscriber = Courier::Subscriber.where(user_id: current_user.id)
+      if resource.nil?
+        s = Courier.get! sub
+        subscriber = Courier::Subscriber.where(subscription_id: s.id)
+     else      
+        subscriber = subscriber.where(resource_id: resource.id, resource_type: resource.class.model_name)
+      end      
+      subscriber = subscriber.first
+      
       if subscriber.present?
         deactivate_subscription_link subscriber
       else
@@ -89,12 +93,9 @@ module CourierHelper
   end
 
   def create_subscription_url resource, subscription
-    urls.create_and_activate_api_subscriptions_url(
-      :resource_type => resource.class.name,
-      :resource_id   => resource.id,
-      :subscription_name  => subscription,
-      :format => :json
-    )
+    arguments = {:subscription_name => subscription, :format => :json}
+    arguments.merge!({:resource_type => resource.class.name, :resource_id => resource.id}) unless resource.nil?
+    urls.create_and_activate_api_subscriptions_url(arguments)
   end
 
   def deactivate_subscription_url subscriber
@@ -113,16 +114,6 @@ module CourierHelper
     # если делать на хелперах вылазит ошибка undefined method `output_buffer='
     # инклюдинг TagHelper дело не меняет, добавление атрибута output_buffer ломает тесты
     "<span class='subscribers_count'>(#{count})</span>"
-  end
-  
-  def check_subscription user, subscription_name, resource=nil, opts={}
-    subscription = Courier::Subscription::Base.find_by_name(subscription_name)
-    if resource.nil?    
-      subscriber = Courier::Subscriber.where(user_id: user.id, subscription_id: subscription.id).first
-    else
-      subscriber = Courier::Subscriber.where(user_id: user.id, subscription_id: subscription.id, resource_id: resource.id).first
-    end
-    subscriber.present?
   end
 end
 

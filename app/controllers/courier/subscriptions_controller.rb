@@ -8,7 +8,7 @@ class Courier::SubscriptionsController < ::ApplicationController
   include ActionView::Helpers::UrlHelper
 
   def create_and_activate
-    render_toggle_link current_user.subscribe( subscription, resource )
+    render_toggle_link current_user.subscribe(subscription, resource)
   end
 
   def destroy
@@ -49,7 +49,11 @@ class Courier::SubscriptionsController < ::ApplicationController
   end
 
   def resource
-    @resource ||= params[:resource_type].constantize.find( params[:resource_id] )
+    if params[:resource_id].nil?
+      nil
+    else  
+      @resource ||= params[:resource_type].constantize.find( params[:resource_id] )
+    end
   end
 
   def render_toggle_link subscriber
