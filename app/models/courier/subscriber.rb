@@ -17,7 +17,7 @@ class Courier::Subscriber < ActiveRecord::Base
   }
 
   scope :without_users, lambda{ |users|
-    where("user_id not in (#{users.map{|el| el.id}.join(',')})")
+    where("user_id not in (?)", users.map(&:id))
   }
 
   scope :by_subscription, lambda{ |subscription| where(subscription_id: subscription.id)}

@@ -103,7 +103,8 @@ class Courier::Subscription::Base < ActiveRecord::Base
 
   def collect_subscribers resource=nil, params={}
     list = subscribers.by_resource resource
-    list = list.without_users params[:exclude_users].compact if params[:exclude_users]
+    exclude_users = params[:exclude_users].compact if params[:exclude_users]
+    list = list.without_users exclude_users if exclude_users.any?
     list
   end
 
