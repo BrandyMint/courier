@@ -1,7 +1,7 @@
 class Courier::LogEntity < ActiveRecord::Base
 
-  belongs_to :subscriber, :class_name => 'Courier::Subscriber'
-  belongs_to :subscription, :class_name => 'Courier::Subscription::Base'
+  belongs_to :subscription, :class_name => 'Courier::Subscription'
+  belongs_to :subscription_list, :class_name => 'Courier::SubscriptionList'
   belongs_to :user, :class_name => '::User'
   belongs_to :resource, :polymorphic => true
   belongs_to :restrict_object, :polymorphic => true
@@ -11,7 +11,7 @@ class Courier::LogEntity < ActiveRecord::Base
   validates :subject, :presence => true
 
   # validates :subscriber, :presence => true
-  validates :subscription, :presence => true
+  validates :subscription_list, :presence => true
 
   # Проекрка на уникальность делается по ключу
   # [:subscription_id, :object_type, :object_id, :to]
@@ -23,9 +23,9 @@ class Courier::LogEntity < ActiveRecord::Base
   delegate :name, :to => :subscription, :prefix => true
 
   def self.save_mail mail, context
-    user = context.user || context.subscriber.try(:user)
+    user = context.user || context.subscription.try(:user)
 
-    context.subscription.log_entities.create! :subscriber => context.subscriber,
+    context.subscription_list.log_entities.create! :subscription => context.subscription,
       :resource => context.resource,
       :restrict_object => context.object,
       :user => user,

@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Danil Pismenny"]
-  s.date = "2012-09-04"
+  s.date = "2012-10-03"
   s.description = ""
   s.email = "danil@orionet.ru"
   s.extra_rdoc_files = [
@@ -27,18 +27,16 @@ Gem::Specification.new do |s|
     "Rakefile",
     "VERSION",
     "app/assets/javascripts/courier.js",
-    "app/controllers/courier/subscribers_controller.rb",
     "app/controllers/courier/subscriptions_controller.rb",
     "app/helpers/courier_helper.rb",
     "app/mailers/courier/mailer/base.rb",
     "app/models/courier/log_entity.rb",
-    "app/models/courier/subscriber.rb",
-    "app/models/courier/subscription/base.rb",
-    "app/models/courier/subscription/common.rb",
+    "app/models/courier/subscription.rb",
+    "app/models/courier/subscription_list.rb",
+    "app/models/courier/subscription_type/base.rb",
     "courier.gemspec",
     "lib/courier.rb",
     "lib/courier/active_record_ext.rb",
-    "lib/courier/dsl.rb",
     "lib/courier/engine.rb",
     "spec/courier_spec.rb",
     "spec/spec_helper.rb",

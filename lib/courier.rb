@@ -1,18 +1,11 @@
 # -*- coding: utf-8 -*-
 module Courier
+
+  # Кандидаты на вынос - current_user заменить на courier_current_subscriber и определять его в приложении
+  # authorize_user! переименовать в courier_authorize_subscriber и также определять его в приложении
+
   def self.table_name_prefix
     'courier_'
-  end
-
-  def self.get name
-    Courier::Subscription::Base.find_by_name name
-  end
-
-  def self.get! name
-    sub = get name
-    raise "Can't find subscription #{name}" unless sub
-
-    return sub
   end
 
   # name - имя рассылки
@@ -23,35 +16,28 @@ module Courier
   #
   #   Courier.notify :company_news, company, news_item
   #
-  def self.notify name, resource=nil, params={} #, *args
-    s = get name
-    raise "Пытаемся оповестить рассылку которой не существует #{name}" unless s
-    s.notify resource, params
+  def self.notify subscription_list, resource=nil, params={} #, *args
+    subscription_list = Courier::SubscriptionList.find_by_name! subscription_list unless subscription_list.is_a? Courier::SubscriptionList
+    subscription_list.subscription_type.notify subscription_list, resource, params
   end
 
-  def self.create name, klass=Courier::Subscription::Base, &block
-    puts "Create subscription: #{name}"
-    s = Courier.get( name ) || klass.new( :name=>name )
-    d = Courier::DSL.new s
-    d.instance_exec &block
-    s.save!
+  def self.custom_notify subscription_list, subscription_type, resource=nil, params={} #, *args
+    subscription_list = Courier::SubscriptionList.find_by_name! subscription_list unless subscription_list.is_a? Courier::SubscriptionList
+    subscription_type.notify subscription_list, resource, params
   end
 
-  def self.subscribe user, sub_name, resource=nil, *args
-    user.subscribe sub_name, resource, *args
+  def self.subscribe user, subscription_list, resource=nil, *args
+    subscription_list = Courier::SubscriptionList.find_by_name! subscription_list unless subscription_list.is_a? Courier::SubscriptionList
+    subscription_list.subscribe user, resource, *args
   end
 
-  def self.unsubscribe user, sub_name, resource=nil, *args
-    user.unsubscribe sub_name, resource, *args
-  end
-
-  module Subscription
-
+  def self.unsubscribe user, subscription_list, resource=nil, *args
+    subscription_list = Courier::SubscriptionList.find_by_name! subscription_list unless subscription_list.is_a? Courier::SubscriptionList
+    subscription_list.unsubscribe user, resource, *args
   end
 end
 
 require 'courier/active_record_ext'
 ActiveRecord::Base.extend Courier::ActiveRecordExt
 
-require 'courier/dsl'
 require 'courier/engine'

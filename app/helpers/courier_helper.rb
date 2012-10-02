@@ -6,50 +6,50 @@ module CourierHelper
 
   def toggle_subscription_link resource, sub=:new_comment
     return '' unless current_user
-    resource.is_a?(Courier::Subscriber) ? tooltip_class = resource.resource.class : tooltip_class = resource.class
+    resource.is_a?(Courier::Subscription) ? tooltip_class = resource.resource.class : tooltip_class = resource.class
     tooltip = t ("subscription.tooltip.#{tooltip_class}"), :default => [t("subscription.tooltip.default")]
     content_tag :span, :rel=>:tooltip, :title=>tooltip, :class=>'toggle-subscription' do
       _toggle_subscription_link resource, sub
     end
   end
 
-  # resource = resource or subscriber
+  # resource = resource or subscribtion
   def _toggle_subscription_link resource, sub=:new_comment
 
-    if resource.is_a? Courier::Subscriber
+    if resource.is_a? Courier::Subscription
       _toggle_subscription_link_for_subscriber resource
     else
-      s = Courier.get! sub
-      subscriber = Courier::Subscriber.where(user_id: current_user.id, subscription_id: s.id).by_resource(resource).first
-      if subscriber.present?
-        deactivate_subscription_link subscriber
+      subscription_list = Courier::SubscriptionList.find_by_name! sub
+      subscription = Courier::Subscription.where(user_id: current_user.id, subscription_list_id: subscription_list.id).by_resource(resource).first
+      if subscription.present?
+        deactivate_subscription_link subscription
       else
         create_subscription_link resource, sub
       end
     end
   end
 
-  def _toggle_subscription_link_for_subscriber subscriber
-    if subscriber.persisted?
-      if subscriber.active?
-        deactivate_subscription_link subscriber
+  def _toggle_subscription_link_for_subscriber subscription
+    if subscription.persisted?
+      if subscription.active?
+        deactivate_subscription_link subscription
       else
-        activate_subscription_link subscriber
+        activate_subscription_link subscription
       end
     else
-      create_subscription_link subscriber.resource, subscriber.subscription.name
+      create_subscription_link subscription.resource, subscription.subscription_list.name
     end
   end
 
-  def deactivate_subscription_link subscriber
+  def deactivate_subscription_link subscription
     [icon('volume-up')+t('subscription.activated').html_safe, 
      link_to( t('subscription.deactivate'),
-             deactivate_subscription_url(subscriber),
+             deactivate_subscription_url(subscription),
              :format => :json,
              :remote => true,
              :class  => 'toggle-subscription-link',
              'data-type'=>:jsonp),
-    subscribers_count(subscriber)
+    subscribers_count(subscription)
     ].join(' ').html_safe
   end
 
@@ -67,43 +67,48 @@ module CourierHelper
     ].join(' ').html_safe
   end
 
-  def activate_subscription_link subscriber
+  def activate_subscription_link subscription
     [
       icon('volume-off')+t('subscription.deactivated').html_safe,
       link_to(
         t('subscription.activate'),
-        activate_subscription_url(subscriber),
+        activate_subscription_url(subscription),
         :format => :json,
         :remote =>true,
         :class =>'toggle-subscription-link',
         'data-type' =>'jsonp'),
-      subscribers_count(subscriber)
+      subscribers_count(subscription)
     ].join(' ').html_safe
   end
 
-  def activate_subscription_url subscriber
-    urls.activate_api_subscription_url subscriber, :json
+  def activate_subscription_url subscription
+    urls.activate_api_subscription_url subscription, :json
   end
 
-  def create_subscription_url resource, subscription
-    arguments = {:subscription_name => subscription, :format => :json}
-    arguments.merge!({:resource_type => resource.class.name, :resource_id => resource.id}) unless resource.nil?
+  def create_subscription_url resource, subscription_list_name
+    arguments = {:subscription_list_name => subscription_list_name, :format => :json}
+    arguments.merge!({:resource_type => resource.class.base_class.model_name, :resource_id => resource.id}) unless resource.nil?
     urls.create_and_activate_api_subscriptions_url(arguments)
   end
 
-  def deactivate_subscription_url subscriber
-    urls.deactivate_api_subscription_url subscriber, :json
+  def deactivate_subscription_url subscription
+    urls.deactivate_api_subscription_url subscription, :json
   end
 
   def subscribers_count resource, sub=nil
-    if resource.is_a? Courier::Subscriber
-      subscription = resource.subscription
+    subscription_list = nil
+    if resource.is_a? Courier::Subscription
+      subscription_list = resource.subscription_list
       resource = resource.resource
     else
-      subscription = Courier::Subscription::Base.find_by_name(sub)
+      subscription_list = Courier::SubscriptionList.find_by_name(sub)
     end
-    # здесь так потому что resource то может быть и nil
-    count = Courier::Subscriber.by_resource(resource).by_subscription(subscription).active.count
+
+    count = if resource
+      resource.resource_subscriptions.by_subscription_list(subscription_list).active.count
+    else
+      Courier::Subscription.by_subscription_list(subscription_list).where(:resource_id=>nil).active.count
+    end
     # если делать на хелперах вылазит ошибка undefined method `output_buffer='
     # инклюдинг TagHelper дело не меняет, добавление атрибута output_buffer ломает тесты
     "<span class='subscribers_count'>(#{count})</span>"

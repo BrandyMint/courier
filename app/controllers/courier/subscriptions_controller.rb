@@ -4,47 +4,44 @@ class Courier::SubscriptionsController < ::ApplicationController
   before_filter :authorize_user!
 
   include CourierHelper
-  #include BootstrapHelper TODO: с ним не заводится, прекрасно работает и без него, удалить?
   include ActionView::Helpers::UrlHelper
 
   def create_and_activate
-    render_toggle_link current_user.subscribe(subscription, resource)
+    render_toggle_link subscription
   end
 
-  def destroy
-    subscriber.deactivate
+  def activate
+    subscription.activate
+    render_toggle_link subscription
+  end
 
+  def deactivate
+    subscription.deactivate
     respond_with do |format|
-      format.json { render_toggle_link subscriber }
+      format.json { render_toggle_link subscription }
       format.html { redirect_to params[:backurl] || urls.root_url, notice: "Отписка прошла успешно" }
     end
   end
 
-  def deactivate
-    destroy
-  end
-
-  def activate
-    subscriber.activate
-
-    render_toggle_link subscriber
+  def show
+    @subscription = subscription
   end
 
   private
 
   def subscription
-    if params[:subscription_name]
-      Courier.get! params[:subscription_name]
+    @subscription ||= if params[:id]
+      current_user.subscriber_subscriptions.find_by_id( params[:id] )
     else
-      Courier::Subscription::Base.find params[:subscription_id]
+      Courier.subscribe current_user, subscription_list, resource
     end
   end
 
-  def subscriber
-    @subscriber ||= if params[:id]
-      current_user.user_subscribers.find_by_id( params[:id] )
+  def subscription_list
+    if params[:subscription_list_name]
+      Courier::SubscriptionList.find_by_name! params[:subscription_list_name]
     else
-      current_user.subscribe( subscription, resource )
+      Courier::SubscriptionList.find params[:subscription_list_id]
     end
   end
 
@@ -56,8 +53,8 @@ class Courier::SubscriptionsController < ::ApplicationController
     end
   end
 
-  def render_toggle_link subscriber
-    render :json => { :html => _toggle_subscription_link(subscriber).html_safe },
+  def render_toggle_link subscription
+    render :json => { :html => _toggle_subscription_link(subscription).html_safe },
       :callback => params[:callback]
   end
 end
