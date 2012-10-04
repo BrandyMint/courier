@@ -26,9 +26,7 @@ class Courier::SubscriptionList < ActiveRecord::Base
     list
   end
 
-  private
-
   def get_subscription user, resource = nil
-    subscriptions.by_resource(resource).where(user_id: user.id, resource_id: nil).first
+    subscriptions.by_resource(resource).where(user_id: user.id).first
   end
 end

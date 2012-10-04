@@ -25,7 +25,7 @@ class Courier::LogEntity < ActiveRecord::Base
   def self.save_mail mail, context
     user = context.user || context.subscription.try(:user)
 
-    context.subscription_list.log_entities.create! :subscription => context.subscription,
+    context.subscription.subscription_list.log_entities.create! :subscription => context.subscription,
       :resource => context.resource,
       :restrict_object => context.object,
       :user => user,

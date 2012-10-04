@@ -8,11 +8,6 @@ class Courier::Subscription < ActiveRecord::Base
 
   scope :active, where(is_active: true)
 
-  scope :by_resource, lambda { |resource|
-    conditions = resource ? { :resource_id => nil } : { :resource_id => resource.id, :resource_type => resource.class.base_class.model_name}
-    active.where(conditions)
-  }
-
   scope :exclude_users, lambda{ |users|
     where("user_id not in (?)", users.map(&:id))
   }
@@ -20,7 +15,7 @@ class Courier::Subscription < ActiveRecord::Base
   scope :by_subscription_list, lambda{ |subscription_list| where(subscription_list_id: subscription_list.id)}
 
   scope :by_resource, lambda{ |resource|
-    resource ? where(resource_id: nil) : where(resource_id: resource.id, resource_type: resource.type)
+    resource ? where(resource_id: resource.id, resource_type: resource.class.base_class.model_name) : where(resource_id: nil)
   }
 
   validates :user, :presence => true
