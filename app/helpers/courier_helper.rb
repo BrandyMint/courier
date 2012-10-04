@@ -19,15 +19,8 @@ module CourierHelper
     if resource.is_a? Courier::Subscriber
       _toggle_subscription_link_for_subscriber resource
     else
-      subscriber = Courier::Subscriber.where(user_id: current_user.id)
-      if resource.nil?
-        s = Courier.get! sub
-        subscriber = Courier::Subscriber.where(subscription_id: s.id)
-     else      
-        subscriber = subscriber.where(resource_id: resource.id, resource_type: resource.class.model_name)
-      end      
-      subscriber = subscriber.first
-      
+      s = Courier.get! sub
+      subscriber = Courier::Subscriber.where(user_id: current_user.id, subscription_id: s.id).by_resource(resource).first
       if subscriber.present?
         deactivate_subscription_link subscriber
       else

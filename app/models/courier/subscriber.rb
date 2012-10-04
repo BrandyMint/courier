@@ -10,9 +10,7 @@ class Courier::Subscriber < ActiveRecord::Base
   scope :active, where(is_active: true)
 
   scope :by_resource, lambda { |resource|
-    conditions = "resource_id is NULL"
-    conditions = [conditions + " OR resource_id = ?", resource.id] if resource.present?
-
+    conditions = resource ? { :resource_id => nil } : { :resource_id => resource.id, :resource_type => resource.class.base_class.model_name}
     active.where(conditions)
   }
 
