@@ -11,4 +11,5 @@ group :development do
   gem 'simplecov-rcov'
   gem 'rspec'
   gem 'sqlite3'
+  gem 'yard'
 end

@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+# Модель описывающая подписку пользователя на определенный лист рассылки({Courier::SubscriptionList}) по определенному ресурсу.
+# Если ресурс равен nil, мы считаем что пользователь подписан на все ресурсы.
 class Courier::Subscription < ActiveRecord::Base
 
   belongs_to :user
@@ -24,23 +26,28 @@ class Courier::Subscription < ActiveRecord::Base
 
   validates :subscription_list_id, :uniqueness => {:scope => [:user_id, :resource_id, :resource_type]}
 
+  before_validation :check_token
+
   delegate :to_s, :to_label, :email, :to => :user
   delegate :description, :access, :to => :subscription_list
 
-  before_validation :check_token
-
+  # Активна подписка или нет
   def active?
     persisted? and is_active
   end
 
+  # кому отправляется письмо
   def to
     user.email_to
   end
 
+  # активирует подписку
   def activate
     update_attribute :is_active, true
   end
 
+  # деактивирует подписку если в листе рассылки({Courier::SubscriptionList}) sticky равен true,
+  # иначе удаляет рассылку
   def deactivate
     if subscription_list.sticky
       update_attribute :is_active, false
@@ -49,14 +56,19 @@ class Courier::Subscription < ActiveRecord::Base
     end
   end
 
+  # Название подписки, используется поле description из Листа
+  # Рассылки({Courier::SubscriptionList}) и кастомная часть ресурса
+  # {Courier::Subscription#resource_title}
   def title
     return description unless resource
 
     [description, resource_title].join ' '
   end
 
+  # Часть названия подписки, вычисляемая по ресурсу, к которому привязана подписка.
+  # Настройки названий устанавливаются непосредственно в ресурсе при вызове
+  # {Courier::ActiveRecordExt#has_subscriptions}
   def resource_title
-    # Подписка без ресурса
     return '' unless resource.present?
 
     courier_resource_title = self.resource.class.instance_variable_get(:@courier_resource_title)
@@ -72,6 +84,7 @@ class Courier::Subscription < ActiveRecord::Base
     end
   end
 
+  # ссылка на ресурс, если он существует
   def resource_url
     return nil unless resource
     if resource.respond_to? :url
@@ -82,6 +95,7 @@ class Courier::Subscription < ActiveRecord::Base
 
   protected
 
+  # проверка на наличие уникального токена
   def check_token
     return if self.token and !self.token.blank?
     token = generate_token(20)
@@ -91,6 +105,7 @@ class Courier::Subscription < ActiveRecord::Base
     self.token = token
   end
 
+  # генерация токена
   def generate_token(length)
     o =  [('0'..'9'),('a'..'z'),('A'..'Z')].map{|i| i.to_a}.flatten
     (0..length).map{ o[rand(o.length)]  }.join

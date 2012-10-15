@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+# Контроллер по управлению подписками, подключается в роутах rails приложения
+
 class Courier::SubscriptionsController < ::ApplicationController
   respond_to :json, :html
   before_filter :authorize_user!, :except=>[:show, :deactivate_by_token]
