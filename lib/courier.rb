@@ -24,9 +24,9 @@ module Courier
   #  Courier.subscribe current_user, :new_comment, Comment.last
   # ==Пример подписки на все ресурсы
   #  Courier.subscribe current_user, :new_comments
-  def self.subscribe user, subscription_list, resource=nil
+  def self.subscribe user, subscription_list, resource=nil, params={}
     subscription_list = Courier::SubscriptionList.find_by_name! subscription_list unless subscription_list.is_a? Courier::SubscriptionList
-    subscription_list.subscribe user, resource
+    subscription_list.subscribe user, resource, params
   end
 
   # Отписывает юзера от листа рассылки по ресурсу. Находит в базе лист рассылки

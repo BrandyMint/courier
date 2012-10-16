@@ -56,6 +56,11 @@ class Courier::Subscription < ActiveRecord::Base
     end
   end
 
+  # делает подписку временной/постоянной
+  def set_temporary val
+    update_attribute :temporary, val
+  end
+
   # Название подписки, используется поле description из Листа
   # Рассылки({Courier::SubscriptionList}) и кастомная часть ресурса
   # {Courier::Subscription#resource_title}
