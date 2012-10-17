@@ -119,3 +119,4 @@ properties:
 ## Docs
 
 http://rubydoc.info/github/BrandyMint/courier/master/frames
+http://docs.brandymint.ru
