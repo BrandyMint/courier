@@ -2,7 +2,6 @@
 # Класс описывающий Листы рассылок, на которые может быть подписан пользователь, и реализущий логику подписки/отписки.
 # Лист рассылки имеет ссылку на дефолтный способ рассылки({Courier::SubscriptionType})
 class Courier::SubscriptionList < ActiveRecord::Base
-  has_many :log_entities, :foreign_key => :subscription_list_id, :class_name => 'LogEntity'
   has_many :subscriptions, :foreign_key=>:subscription_list_id, :class_name => 'Subscription',
            :dependent => :destroy
 
