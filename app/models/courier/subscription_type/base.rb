@@ -7,7 +7,7 @@ class Courier::SubscriptionType::Base < ActiveRecord::Base
 
   serialize :properties
 
-  has_many :log_entities, :foreign_key => :subscription_list_id, :class_name => 'Courier::LogEntity'
+  has_many :log_entities, :foreign_key => :subscription_type_id, :class_name => 'Courier::LogEntity'
 
   before_save do
     self.subject = self.description if self.subject.blank?
