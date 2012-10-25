@@ -8,6 +8,16 @@ class Courier::SubscriptionsController < ::ApplicationController
   include CourierHelper
   include ActionView::Helpers::UrlHelper
 
+  def create
+    if params[:courier_subscription][:resource_type].present? && params[:courier_subscription][:resource_id].present?
+      resource = params[:courier_subscription][:resource_type].constantize.find(params[:courier_subscription][:resource_id])
+    else
+      resource = nil
+    end
+    Courier.subscribe(current_user, params[:courier_subscription][:name], resource)
+    redirect_to :back, notice: 'Вы подписаны на рассылку.'
+  end
+
   def create_and_activate
     subscription_list = Courier::SubscriptionList.find_by_name! params[:subscription_list_name]
     resource = params[:resource_type].present? && params[:resource_id].present? ? params[:resource_type].constantize.find(params[:resource_id]) : nil
