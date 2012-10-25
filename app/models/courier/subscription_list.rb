@@ -9,13 +9,14 @@ class Courier::SubscriptionList < ActiveRecord::Base
 
   # Добавляет пользователя в текущий лист рассылки по заданному ресурсу.
   # Если пользователь уже в листе и не активен - активирует его подписку
-  def subscribe user, resource = nil
+  def subscribe user, resource = nil, params={temporary: false}
     s = get_subscription user, resource
     if s
+      s.set_temporary params[:temporary]
       s.activate unless s.active?
       s
     else
-      subscriptions.create(user: user, resource: resource)
+      subscriptions.create(user: user, resource: resource, temporary: params[:temporary])
     end
   end
 

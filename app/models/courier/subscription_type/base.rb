@@ -30,6 +30,7 @@ class Courier::SubscriptionType::Base < ActiveRecord::Base
     list = subscription_list.collect_subscriptions resource, params
     list.each do |subscription|
       safe_send_mail context( resource, subscription, params )
+      subscription.deactivate if subscription.temporary?
     end
   end
 
