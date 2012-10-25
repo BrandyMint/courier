@@ -10,7 +10,7 @@ class Courier::SubscriptionsController < ::ApplicationController
 
   def create_and_activate
     subscription_list = Courier::SubscriptionList.find_by_name! params[:subscription_list_name]
-    resource = params[:resource_type].constantize.find( params[:resource_id] )
+    resource = params[:resource_type].present? && params[:resource_id].present? ? params[:resource_type].constantize.find(params[:resource_id]) : nil
     Courier.subscribe current_user, subscription_list, resource
     render_toggle_link subscription_list, resource
   end
