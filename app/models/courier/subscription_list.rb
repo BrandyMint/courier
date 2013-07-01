@@ -29,7 +29,7 @@ class Courier::SubscriptionList < ActiveRecord::Base
 
   # Получает список всех подписок({Courier::Subscription}) этого листа по заданному ресурсу
   def collect_subscriptions resource=nil, params={exclude_users:nil}
-    list = subscriptions.by_resource resource
+    list = subscriptions.active.by_resource(resource)
     list = list.exclude_users params[:exclude_users].compact if params[:exclude_users]
     list
   end
